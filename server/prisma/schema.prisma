@@ -1,0 +1,188 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CUSTOMERS
+  ORGANIZERS
+}
+
+model User {
+  id             Int      @id @default(autoincrement())
+  name           String
+  username       String   @unique
+  password       String
+  email          String   @unique
+  emailConfirmed Boolean  @default(false)
+  role           Role     @default(CUSTOMERS)
+  referralNumber String   @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  walletBalance  Int      @default(0)
+
+
+  Referral Referral[]
+  Point    Point[]
+  Coupon   Coupon[]
+
+  confirmToken confirmToken[]
+
+  Event Event[]
+
+  Registration Registration[]
+}
+
+model Referral {
+  id             Int      @id @default(autoincrement())
+  referredById   Int
+  referredUserId Int
+  createdAt      DateTime @default(now())
+
+  referredBy User @relation(fields: [referredById], references: [id], onDelete: Cascade)
+}
+
+model Point {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  pointsEarned Int      @default(10000)
+  expiresAt    DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Coupon {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  discount  Int      @default(10)
+  expiresAt DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model confirmToken {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  token       String
+  expiredDate DateTime
+  used        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Event {
+  id             Int         @id @default(autoincrement())
+  name           String
+  excerpt        String
+  description    String
+  date           DateTime
+  price          Int         @default(0)
+  image          String
+  location       String
+  availableSeats Int
+  organizerId    Int
+  isFree         Boolean
+  slug           String
+  promotions     Promotion[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  organizer     User            @relation(fields: [organizerId], references: [id])
+  registrations Registration[]
+  transactions  Transaction[]
+  CategoryEvent CategoryEvent[]
+  Attendee      Attendee[]
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  image       String
+  slug        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  CategoryEvent CategoryEvent[]
+}
+
+model CategoryEvent {
+  id         Int @id @default(autoincrement())
+  eventId    Int
+  categoryId Int
+
+  Event    Event    @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Promotion {
+  id            Int      @id @default(autoincrement())
+  eventId       Int
+  name          String
+  discountValue Int      @default(10)
+  limit         Int
+  referralCode  String?
+  validUntil    DateTime
+
+  event Event @relation(fields: [eventId], references: [id])
+}
+
+model Attendee {
+  id           Int     @id @default(autoincrement())
+  eventId      Int
+  name         String
+  email        String
+  hasPaid      Boolean @default(false)
+  referralCode String?
+
+  event Event @relation(fields: [eventId], references: [id])
+}
+
+model EventReview {
+  id                Int      @id @default(autoincrement())
+  overallExperience Int      @default(0)
+  qualityOfEvent    Int      @default(0)
+  suggestions       String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+
+model Registration {
+  id        Int      @id @default(autoincrement())
+  eventId   Int
+  userId    Int
+  createdAt DateTime @default(now())
+
+  event Event @relation(fields: [eventId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  Transaction Transaction[]
+}
+
+model Transaction {
+  id             Int      @id @default(autoincrement())
+  amount         Decimal  @default(0.0)
+  createdAt      DateTime @default(now())
+  eventId        Int
+  registrationId Int
+
+  // Example relation: A transaction might be tied to an event or a registration
+  event        Event         @relation(fields: [eventId], references: [id])
+  registration Registration? @relation(fields: [registrationId], references: [id])
+}
+
+//User - Referral = one to many
+//User - Points = one to many 
+//User - Coupon = one to many
