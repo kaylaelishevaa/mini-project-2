@@ -157,17 +157,19 @@ const EventDetail = ({ params }) => {
 
             {/* Hosted By */}
             <div>
-              <h3 className="font-bold text-lg mb-2">Hosted by</h3>
-              <div className="flex items-center gap-4">
-                <Image
+              <div>
+                <h3 className="font-bold text-lg mb-2">Hosted by</h3>
+              </div>
+              <div>{event.organizer.name}</div>
+              <div className="flex items-center gap-4 mt-4">
+                {/* <Image
                   src={event.image}
                   alt="Host Avatar"
                   width={50}
                   height={50}
                   className="rounded-full"
-                />
+                /> */}
                 <div>
-                  <p className="font-bold">{event.description}</p>
                   <div className="flex gap-2 mt-1">
                     <button className="px-4 py-1 text-sm border rounded-lg hover:bg-gray-100">
                       Contact

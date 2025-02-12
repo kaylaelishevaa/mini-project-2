@@ -21,6 +21,62 @@ interface AllEvent {
 
 const EVENTS_PER_PAGE = 6;
 
+// EventCard component
+const EventCard = ({ event }: { event: AllEvent }) => (
+  <div className="bg-white p-4 rounded shadow">
+    <div className="relative h-48 overflow-hidden rounded-t">
+      <Image
+        src={event.image}
+        alt={event.name}
+        fill
+        className="absolute inset-0 w-full h-full object-cover object-center"
+      />
+    </div>
+    <div className="p-4">
+      <h2 className="text-xl font-bold mb-2">{event.name}</h2>
+      <p className="text-gray-600 mb-2">
+        <strong>Price:</strong> Rp.{event.price}
+      </p>
+      <p className="text-gray-600 mb-2">
+        <strong>Date:</strong> {new Date(event.date).toLocaleDateString()}
+      </p>
+      <p className="text-gray-600 mb-2">
+        <strong>Location:</strong> {event.location}
+      </p>
+      <p className="text-gray-600 mb-2">
+        <strong>Description:</strong> {event.description}
+      </p>
+      <p className="text-gray-600 mb-2">
+        <strong>Available Seats:</strong> {event.availableSeats}
+      </p>
+      <div className="flex flex-wrap gap-2 mb-4">
+        {event.categories.map((category, index) => (
+          <span
+            key={index}
+            className="bg-red-900 text-white rounded-full px-3 py-1 text-sm"
+          >
+            {category}
+          </span>
+        ))}
+      </div>
+      <div className="flex space-x-2">
+        <Link
+          href={`/payment/${event.id}`}
+          className="bg-red-900 text-white px-4 py-2 rounded hover:bg-black transition-colors duration-300"
+        >
+          Buy Tickets
+        </Link>
+        <Link
+          href={`/eventlisting/${event.id}`}
+          className="bg-red-900 text-white px-4 py-2 rounded hover:bg-black transition-colors duration-300"
+        >
+          Detail Event
+        </Link>
+      </div>
+    </div>
+  </div>
+);
+
 export default function EventListing() {
   const [events, setEvents] = useState<AllEvent[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<AllEvent[]>([]);
@@ -90,17 +146,20 @@ export default function EventListing() {
   };
 
   const debouncedSearch = (
-    func: (searchTerm: string) => void,
+    func: (event: React.ChangeEvent<HTMLInputElement>) => void,
     delay: number
   ) => {
     let timeout: NodeJS.Timeout;
-    return (searchTerm: string) => {
+    return (event: React.ChangeEvent<HTMLInputElement>) => {
       clearTimeout(timeout);
-      timeout = setTimeout(() => func(searchTerm), delay);
+      timeout = setTimeout(() => func(event), delay);
     };
   };
 
-  const handleDebouncedSearch = debouncedSearch(handleSearchChange, 300);
+  const handleDebouncedSearch = debouncedSearch(
+    (event) => setSearchTerm(event.target.value),
+    300
+  );
 
   const handleCategoryChange = (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -129,9 +188,7 @@ export default function EventListing() {
 
   return (
     <div className="container mx-auto p-4">
-      <div>
-        <Navbar />
-      </div>
+      <Navbar />
       <div className="mt-8">
         <h1 className="text-4xl font-bold mb-4 text-center">Upcoming Events</h1>
         <div className="mb-4">
@@ -171,59 +228,7 @@ export default function EventListing() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {currentEvents.map((event) => (
-            <div key={event.id} className="bg-white p-4 rounded shadow">
-              <div className="relative h-48 overflow-hidden rounded-t">
-                <Image
-                  src={event.image}
-                  alt={event.name}
-                  fill
-                  className="absolute inset-0 w-full h-full object-cover object-center"
-                />
-              </div>
-              <div className="p-4">
-                <h2 className="text-xl font-bold mb-2">{event.name}</h2>
-                <p className="text-gray-600 mb-2">
-                  <strong>Price:</strong> ${event.price}
-                </p>
-                <p className="text-gray-600 mb-2">
-                  <strong>Date:</strong>{" "}
-                  {new Date(event.date).toLocaleDateString()}
-                </p>
-                <p className="text-gray-600 mb-2">
-                  <strong>Location:</strong> {event.location}
-                </p>
-                <p className="text-gray-600 mb-2">
-                  <strong>Description:</strong> {event.description}
-                </p>
-                <p className="text-gray-600 mb-2">
-                  <strong>Available Seats:</strong> {event.availableSeats}
-                </p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {event.categories.map((category, index) => (
-                    <span
-                      key={index}
-                      className="bg-red-900 text-white rounded-full px-3 py-1 text-sm"
-                    >
-                      {category}
-                    </span>
-                  ))}
-                </div>
-                <div className="flex space-x-2">
-                  <Link
-                    href={`/payment/${event.id}`}
-                    className="bg-red-900 text-white px-4 py-2 rounded hover:bg-black transition-colors duration-300"
-                  >
-                    Buy Tickets
-                  </Link>
-                  <Link
-                    href={`/eventlisting/${event.id}`}
-                    className="bg-red-900 text-white px-4 py-2 rounded hover:bg-black transition-colors duration-300"
-                  >
-                    Detail Event
-                  </Link>
-                </div>
-              </div>
-            </div>
+            <EventCard key={event.id} event={event} />
           ))}
         </div>
         <div className="mt-4 flex justify-center">

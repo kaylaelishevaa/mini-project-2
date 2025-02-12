@@ -10,11 +10,22 @@ import { roleGuard, verifyToken } from "../middleware/auth-middleware";
 
 const router = express.Router();
 
-router.route("/").get(GetAllEvents).post(verifyToken, roleGuard("ORGANIZERS"), upload.single("image"), asynchandler(CreateEvent));
+router.route("/").get(GetAllEvents).post(upload.single("image"), CreateEvent);
+// verifyToken,
+// roleGuard("ORGANIZERS"),
+
 router.route("/:id").get(GetSingleEvent);
 
 export default router;
-function asynchandler(CreateEvent: (req: express.Request, res: express.Response, next: express.NextFunction) => Promise<express.Response<any, Record<string, any>> | undefined>): import("express-serve-static-core").RequestHandler<{}, any, any, import("qs").ParsedQs, Record<string, any>> {
-    throw new Error("Function not implemented.");
-}
 
+function asynchandler(
+  fn: (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => Promise<any>
+): express.RequestHandler {
+  return (req, res, next) => {
+    return fn(req, res, next).catch(next);
+  };
+}

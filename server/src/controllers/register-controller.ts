@@ -53,52 +53,46 @@ export async function register(
       },
     });
 
-      const referralNumber = `${newUser.id}REF${Date.now()
-        .toString()
-        .slice(-3)}`;
-      await prisma.user.update({
-        where: { id: newUser.id },
-        data: { referralNumber },
+    const referralNumber = `${newUser.id}REF${Date.now().toString().slice(-3)}`;
+    await prisma.user.update({
+      where: { id: newUser.id },
+      data: { referralNumber },
+    });
+
+    if (referralCode) {
+      const referringUser = await prisma.user.findUnique({
+        where: { referralNumber: referralCode },
       });
 
-      if (referralCode) {
-        const referringUser = await prisma.user.findUnique({
-          where: { referralNumber: referralCode },
+      if (referringUser) {
+        await prisma.point.create({
+          data: {
+            userId: referringUser.id,
+            pointsEarned: 10000,
+            expiresAt: new Date(new Date().setMonth(new Date().getMonth() + 3)),
+          },
         });
 
-        if (referringUser) {
-          await prisma.point.create({
-            data: {
-              userId: referringUser.id,
-              pointsEarned: 10000,
-              expiresAt: new Date(
-                new Date().setMonth(new Date().getMonth() + 3)
-              ),
-            },
-          });
+        await prisma.referral.create({
+          data: {
+            referredById: referringUser.id,
+            referredUserId: newUser.id,
+          },
+        });
 
-          await prisma.referral.create({
-            data: {
-              referredById: referringUser.id,
-              referredUserId: newUser.id,
-            },
-          });
-
-          await prisma.coupon.create({
-            data: {
-              userId: newUser.id,
-              discount: 10,
-              expiresAt: new Date(
-                new Date().setMonth(new Date().getMonth() + 3)
-              ), 
-            },
-          });
-        } else {
-          res.status(400).json({ message: "Referral code is invalid." });
-          return;
-        }
+        await prisma.coupon.create({
+          data: {
+            userId: newUser.id,
+            discount: 10,
+            expiresAt: new Date(new Date().setMonth(new Date().getMonth() + 3)),
+          },
+        });
+      } else {
+        res.status(400).json({ message: "Referral code is invalid." });
+        return;
       }
-    
+    }
+
     const confirmToken = crypto.randomBytes(20).toString("hex");
     const confirmationLink = `http://localhost:8000/api/v1/confirm/email?token=${confirmToken}`;
 

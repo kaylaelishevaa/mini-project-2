@@ -1,3 +1,5 @@
+import "dotenv/config";
+
 import express from "express";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
@@ -12,6 +14,9 @@ import cookieParser from "cookie-parser";
 import { getOrganizerDashboard } from "./controllers/dashboard-controller";
 import walletRouter from "./routes/wallet-router";
 import eventRouter from "./routes/event-router";
+import categoryRouter from "./routes/category-router";
+import reviewRouter from "./routes/review-router";
+import promotionsRouter from "./routes/promotions-router";
 
 const app = express();
 const PORT = 8000;
@@ -33,8 +38,10 @@ app.use("/api/v1/confirm", confirmEmailRouter);
 app.use("/api/v1", pointsRouter);
 app.use("/api/v1/wallet", walletRouter);
 app.use("/api/v1/dashboard", getOrganizerDashboard);
-app.use("/api/v1/events", eventRouter)
-// app.use("/api/v1/categories", categoriesRouter)
+app.use("/api/v1/events", eventRouter);
+app.use("/api/v1/categories", categoryRouter);
+app.use("/api/v1/review", reviewRouter);
+app.use("/api/v1/promotions", promotionsRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

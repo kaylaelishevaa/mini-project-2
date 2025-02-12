@@ -31,7 +31,6 @@ model User {
   updatedAt      DateTime @updatedAt
   walletBalance  Int      @default(0)
 
-
   Referral Referral[]
   Point    Point[]
   Coupon   Coupon[]
@@ -157,7 +156,6 @@ model EventReview {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 }
-
 
 model Registration {
   id        Int      @id @default(autoincrement())

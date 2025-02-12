@@ -4,8 +4,7 @@ import fs from "fs/promises";
 import { PrismaClient } from "@prisma/client";
 import cloudinary from "../configs/cloudinary";
 import { logger } from "../middleware/error-middleware";
-// import { publishEvent } from "../crons/post-crons";
-
+import { EventData } from "../types/express";
 import multer from "multer";
 
 const prisma = new PrismaClient();
@@ -29,11 +28,12 @@ export async function CreateEvent(
   next: NextFunction
 ) {
   try {
-    const organizerId = req.user?.id;
+    // const organizerId = req.user?.id;
 
-    if (!organizerId) {
-      return res.status(401).json({ message: "Unauthorized! Please login." });
-    }
+    // if (!organizerId) {
+    //   res.status(401).json({ message: "Unauthorized! Please login." });
+    //   return;
+    // }
 
     const {
       name,
@@ -42,11 +42,11 @@ export async function CreateEvent(
       location,
       date,
       price,
-      publishedDate,
       availableSeats,
       categoryIds,
-      IsFree,
+      isFree,
       slug,
+      organizerId,
     } = req.body;
 
     const missingFields = [];
@@ -59,7 +59,7 @@ export async function CreateEvent(
     if (!availableSeats) missingFields.push("availableSeats");
     if (!categoryIds || categoryIds.length <= 0)
       missingFields.push("categoryIds");
-    if (!IsFree) missingFields.push("IsFree");
+    if (isFree === undefined) missingFields.push("isFree");
     if (!slug) missingFields.push("slug");
     if (!req.file) missingFields.push("image");
 
@@ -74,42 +74,35 @@ export async function CreateEvent(
 
     if (req.file) {
       const cloudinaryData = await cloudinary.uploader.upload(req.file.path, {
-        folder: "blog/images",
+        folder: "event/images",
       });
 
       await fs.unlink(req.file.path);
 
-      await prisma.event.create({
-        data: {
-          name,
-          description,
-          excerpt,
-          location,
-          image: cloudinaryData.secure_url,
-          date: new Date(date),
-          price: Number(price),
-          availableSeats: parseInt(availableSeats, 10),
-          slug,
-          organizerId,
-          isFree: IsFree,
-          CategoryEvent: {
-            createMany: {
-              data: categoryIds.map((category: number) => ({
-                categoryId: +category,
-              })),
-            },
+      const eventData: EventData = {
+        name,
+        excerpt,
+        description,
+        location,
+        image: cloudinaryData.secure_url,
+        date: new Date(date),
+        price: Number(price),
+        availableSeats: parseInt(availableSeats, 10),
+        slug,
+        organizerId,
+        isFree: isFree,
+        CategoryEvent: {
+          createMany: {
+            data: categoryIds.map((category: number) => ({
+              categoryId: +category,
+            })),
           },
         },
-      });
+      };
 
-    //   if (new Date(date) < new Date()) {
-    //     await prisma.event.update({
-    //       where: { id: newEvent.id },
-    //       data: { published: true },
-    //     });
-    //   } else {
-    //     publishEvent(newEvent.id, new Date(date));
-    //   }
+      await prisma.event.create({
+        data: eventData,
+      });
 
       res.status(201).json({ ok: true, message: "New Event added" });
     } else {
@@ -145,22 +138,27 @@ export async function GetAllEvents(
     const response = events.map((event) => ({
       id: event.id,
       name: event.name,
-      price: event.price,
-      date: event.date,
-      location: event.location,
-      image: event.image,
+      excerpt: event.excerpt,
       description: event.description,
+      date: event.date,
+      price: event.price,
+      image: event.image,
+      location: event.location,
       availableSeats: event.availableSeats,
+      organizerId: event.organizerId,
+      isFree: event.isFree,
       slug: event.slug,
+      createdAt: event.createdAt, // Added createdAt field
+      updatedAt: event.updatedAt, // Added updatedAt field
       categories: event.CategoryEvent.map((category) => category.Category.name),
-      promotions: event.promotions.map((promotion) => ({
-        id: promotion.id,
-        name: promotion.name,
-        discountValue: promotion.discountValue,
-        limit: promotion.limit,
-        referralCode: promotion.referralCode,
-        validUntil: promotion.validUntil,
-      })),
+      // promotions: event.promotions.map((promotion) => ({
+      //   id: promotion.id,
+      //   name: promotion.name,
+      //   discountValue: promotion.discountValue,
+      //   limit: promotion.limit,
+      //   referralCode: promotion.referralCode,
+      //   validUntil: promotion.validUntil,
+      // })),
       attendees: event.Attendee.map((attendee) => ({
         id: attendee.id,
         name: attendee.name,
@@ -193,7 +191,10 @@ export async function GetSingleEvent(
     const event = await prisma.event.findUnique({
       where: { id: +req.params.id },
       include: {
+        organizer: true,
         CategoryEvent: { include: { Category: true } },
+        registrations: true,
+        transactions: true,
         Attendee: true,
         promotions: true,
       },
@@ -209,30 +210,46 @@ export async function GetSingleEvent(
     const response = {
       id: event.id,
       name: event.name,
-      price: event.price,
-      date: event.date,
-      location: event.location,
-      image: event.image,
+      excerpt: event.excerpt,
       description: event.description,
+      date: event.date,
+      price: event.price,
+      image: event.image,
+      location: event.location,
       availableSeats: event.availableSeats,
+      organizerId: event.organizerId,
+      isFree: event.isFree,
       slug: event.slug,
+      organizer: {
+        id: event.organizer.id,
+        name: event.organizer.name,
+        email: event.organizer.email,
+        // Include other organizer fields as necessary
+      },
       categories: event.CategoryEvent.map((category) => category.Category.name),
+      registrations: event.registrations.map((registration) => ({
+        id: registration.id,
+        // Include other registration fields as necessary
+      })),
+      transactions: event.transactions.map((transaction) => ({
+        id: transaction.id,
+        // Include other transaction fields as necessary
+      })),
       attendees: event.Attendee.map((attendee) => ({
         id: attendee.id,
         name: attendee.name,
         email: attendee.email,
-
         hasPaid: attendee.hasPaid,
         referralCode: attendee.referralCode,
       })),
-      promotions: event.promotions.map((promotion) => ({
-        id: promotion.id,
-        name: promotion.name,
-        discountValue: promotion.discountValue,
-        limit: promotion.limit,
-        referralCode: promotion.referralCode,
-        validUntil: promotion.validUntil,
-      })),
+      // promotions: event.promotions.map((promotion) => ({
+      //   id: promotion.id,
+      //   name: promotion.name,
+      //   discountValue: promotion.discountValue,
+      //   limit: promotion.limit,
+      //   referralCode: promotion.referralCode,
+      //   validUntil: promotion.validUntil,
+      // })),
       createdAt: event.createdAt,
       updatedAt: event.updatedAt,
     };
