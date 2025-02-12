@@ -7,6 +7,6 @@ const router = express.Router();
 router
   .route("/")
   .get(verifyToken, 
-    roleGuard("ORGANIZER"), getOrganizerDashboard);
+    roleGuard("ORGANIZERS"), getOrganizerDashboard);
 
 export default router;

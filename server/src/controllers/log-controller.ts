@@ -56,7 +56,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
         secure: false,
       })
       .status(200)
-      .json({ ok: true, message: "Login succeded!" });
+      .json({ ok: true, message: "Login succeded!", role: existingUser.role });
   } catch (error) {
     next(error);
   }

@@ -10,7 +10,7 @@ interface ErrorDisplayProps {
 
 export default function ErrorDisplay({ statusCode, message }: ErrorDisplayProps) {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-red-50 p-4">
+    <div className="flex flex-col items-center justify-center bg-red-50 p-4">
       <div className="max-w-md text-center">
         {/* Icon */}
         <div className="mb-6">

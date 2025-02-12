@@ -241,7 +241,7 @@ export default function PaymentPage({ params }) {
 
         {/* Display total price */}
         <div className="mb-4">
-          <h2 className="font-semibold">Calculated Price (Client-Side)</h2>
+          <h2 className="font-semibold">Calculated Price</h2>
           <p className="text-xl text-green-700 font-bold">
             {formatIDR(computedPrice)}
           </p>
@@ -334,7 +334,7 @@ export default function PaymentPage({ params }) {
               {formatIDR(finalPriceEstimate)}
             </p>
             <p className="text-xs text-gray-400">
-              (*This is a front-end estimate with coupon/points)
+              Estimated with coupons & points
             </p>
           </div>
 

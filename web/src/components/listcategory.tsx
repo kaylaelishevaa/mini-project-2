@@ -7,7 +7,7 @@ import Image from "next/image";
 const ListCategory = () => {
   const [categories, setCategories] = useState({ data: [] }); // Initialize state with an object containing a 'data' property
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const categoriesPerPage = 4;
 

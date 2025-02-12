@@ -16,6 +16,7 @@ datasource db {
 enum Role {
   CUSTOMERS
   ORGANIZERS
+  UNSET
 }
 
 model User {

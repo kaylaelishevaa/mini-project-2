@@ -3,7 +3,7 @@ import { jwtVerify } from "jose";
 import type { NextRequest } from "next/server";
 
 function getJwtSecretKey() {
-  const secret = "superdupersecretyoucannotguessitever!";
+  const secret = process.env.JWT_SECRET_KEY;
   if (!secret || secret.length === 0) {
     throw new Error("The environment variable JWT_SECRET is not set.");
   }
@@ -57,5 +57,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/organizer/dashboard", "/user/dashboard"],
+  matcher: ["/dashboard/:path*", "/payment/:path"],
 };
