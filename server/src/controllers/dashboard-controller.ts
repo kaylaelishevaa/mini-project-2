@@ -1,26 +1,24 @@
-// src/controllers/dashboard-controller.ts
-
 import { Request, Response, NextFunction } from 'express'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-// GET /api/v1/dashboard
 export async function getOrganizerDashboard(
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> {
+  console.log("=> getOrganizerDashboard called");
+  console.log("req.user = ", req.user);
   try {
-    // // 1) Check if user is an organizer
     const userId = req.user?.id
-    const userRole = req.user?.role
-    if (!userId || userRole !== 'ORGANIZERS') {
-      res.status(403).json({ message: 'Access denied. Organizers only.' })
-      return
-    }
 
-    // 2) Fetch all events owned by this organizer
+    // if (!userId) {
+    //   res.status(400).json({ message: "Unauthorized!""})
+    //   return
+    // }
+
+    // 1) Fetch all events owned by this organizer
     const events = await prisma.event.findMany({
       where: { organizerId: userId },
       include: {
@@ -28,8 +26,8 @@ export async function getOrganizerDashboard(
         transactions: true,
       },
     })
+    console.log(userId)
 
-    // Example: Count total registrations & sum transactions
     let totalRegistrations = 0
     let totalRevenue = 0
 
@@ -42,10 +40,8 @@ export async function getOrganizerDashboard(
       totalRevenue += eventRevenue
     })
 
-    // 3) Basic "statistics" for your chart
-    //    We'll do a daily, monthly, yearly grouping of registrations
-
-    // For example, let's get all registrations for this organizer’s events:
+    // 2) Basic statistics for the chart
+    // Get all registrations for this organizer’s events:
     const allRegs = await prisma.registration.findMany({
       where: {
         event: {
@@ -58,14 +54,12 @@ export async function getOrganizerDashboard(
       },
     })
 
-    // We can do more advanced grouping with Prisma's groupBy or do it manually
-    // For demonstration, let's do a manual grouping by day, month, year
 
     // Create some helper function to format date
     function getYearMonthDay(date: Date) {
       return {
         year: date.getFullYear(),
-        month: date.getMonth() + 1, // 0-based
+        month: date.getMonth() + 1, // since it is 0-based
         day: date.getDate(),
       }
     }
@@ -78,7 +72,7 @@ export async function getOrganizerDashboard(
       dailyStats[key] = (dailyStats[key] || 0) + 1
     })
 
-    // If you want monthly stats, you can do something similar:
+    // Group by months
     const monthlyStats: Record<string, number> = {}
     allRegs.forEach((reg) => {
       const { year, month } = getYearMonthDay(reg.createdAt)
@@ -86,16 +80,16 @@ export async function getOrganizerDashboard(
       monthlyStats[key] = (monthlyStats[key] || 0) + 1
     })
 
-    // And yearly stats:
+    // Group by years
     const yearlyStats: Record<string, number> = {}
     allRegs.forEach((reg) => {
       const { year } = getYearMonthDay(reg.createdAt)
       yearlyStats[year] = (yearlyStats[year] || 0) + 1
     })
 
-    // 4) Return everything in a single response
+    // 3) Return everything in a single response
     res.status(200).json({
-      events,             // array of the events with registrations & transactions
+      events,            
       totalEvents: events.length,
       totalRegistrations,
       totalRevenue,

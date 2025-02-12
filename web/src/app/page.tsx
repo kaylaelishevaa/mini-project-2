@@ -5,9 +5,7 @@ import Footer from "../components/footer";
 export default async function HomePage() {
   return (
     <div>
-      <Navbar />
       <HeroSection />
-      <Footer />
     </div>
   );
 }

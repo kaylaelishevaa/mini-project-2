@@ -9,9 +9,12 @@ import logRouter from "./routes/log-router";
 import confirmEmailRouter from "./routes/confirm-email-router";
 import pointsRouter from "./routes/points-router";
 import cookieParser from "cookie-parser";
-import { getOrganizerDashboard } from "./controllers/dashboard-controller";
+import organizerRouter from "./routes/dashboard-router";
 import walletRouter from "./routes/wallet-router";
 import eventRouter from "./routes/event-router";
+import reviewRouter from "./routes/review-router";
+import categoryRouter from "./routes/category-router";
+import "dotenv/config";
 
 const app = express();
 const PORT = 8000;
@@ -32,13 +35,16 @@ app.use("/api/v1/auth", logRouter);
 app.use("/api/v1/confirm", confirmEmailRouter);
 app.use("/api/v1", pointsRouter);
 app.use("/api/v1/wallet", walletRouter);
-app.use("/api/v1/dashboard", getOrganizerDashboard);
-app.use("/api/v1/events", eventRouter)
+app.use("/api/v1/dashboard", organizerRouter);
+app.use("/api/v1/events", eventRouter);
+app.use("/api/v1/review", reviewRouter);
+app.use("/api/v1/categories", categoryRouter);
+
 // app.use("/api/v1/categories", categoriesRouter)
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);
 
 app.listen(PORT, () => {
-  console.log(`Server is listening on: ${PORT}`);
+  console.info(`Server is listening on: ${PORT}`);
 });

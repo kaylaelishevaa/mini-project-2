@@ -1,4 +1,5 @@
 "use client";
+import ErrorDisplay from "@/components/ErrorDisplay";
 import React, { useEffect, useState } from "react";
 import {
   LineChart,
@@ -16,7 +17,7 @@ import {
 interface DashboardData {
   events: {
     id: number;
-    title: string;
+    name: string;
     registrations: unknown[];
     transactions: { amount: string }[];
   }[];
@@ -49,7 +50,9 @@ export default function DashboardPage() {
       setLoading(true);
       setError("");
 
-      const response = await fetch("http://localhost:8000/api/v1/dashboard");
+      const response = await fetch("http://localhost:8000/api/v1/dashboard", {
+        credentials: "include", 
+      });
       if (!response.ok) {
         throw new Error(
           "Failed to fetch dashboard data. Status: " + response.status
@@ -69,7 +72,7 @@ export default function DashboardPage() {
   // Convert the stats record (e.g. { "2023-09-01": 5, "2023-09-02": 10 })
   // into an array Recharts can read: [ { date: "2023-09-01", value: 5 }, { date: "2023-09-02", value: 10 } ]
   function createRechartsData(stats: Record<string, number>) {
-    const sortedDates = Object.keys(stats).sort(); // sort by date
+    const sortedDates = Object.keys(stats).sort();
     return sortedDates.map((date) => ({
       date,
       value: stats[date],
@@ -85,15 +88,11 @@ export default function DashboardPage() {
   }
 
   if (error) {
-    return (
-      <div className="flex justify-center items-center h-[80vh]">
-        <p className="text-red-500">Error: {error}</p>
-      </div>
-    );
+    return <ErrorDisplay statusCode={500} message={error} />;
   }
 
   if (!dashboardData) {
-    return null; // or some fallback
+    return null;
   }
 
   const { totalEvents, totalRegistrations, totalRevenue, events, stats } =
@@ -170,7 +169,7 @@ export default function DashboardPage() {
                   );
                   return (
                     <tr key={evt.id} className="border-b hover:bg-gray-50">
-                      <td className="py-2 px-3">{evt.title}</td>
+                      <td className="py-2 px-3">{evt.name}</td>
                       <td className="py-2 px-3">{registrationCount}</td>
                       <td className="py-2 px-3">{evt.transactions.length}</td>
                       <td className="py-2 px-3">
@@ -240,7 +239,7 @@ export default function DashboardPage() {
                   />
                 </LineChart>
               ) : (
-                // For monthly/yearly, we can do a BarChart, or also a LineChart if you prefer
+                // We use barchart
                 <BarChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="date" />

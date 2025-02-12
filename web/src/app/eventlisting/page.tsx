@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Navbar from "@/components/navbar";
 
 // Define the AllEvent interface here
 interface AllEvent {
@@ -130,7 +129,7 @@ export default function EventListing() {
   return (
     <div className="container mx-auto p-4">
       <div>
-        <Navbar />
+
       </div>
       <div className="mt-8">
         <h1 className="text-4xl font-bold mb-4 text-center">Upcoming Events</h1>

@@ -1,13 +1,13 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 
-export default function PaymentPage() {
+export default function PaymentPage({ params }) {
   const router = useRouter();
-  const params = useParams(); // { eventId: "123" }
 
-  // State event detail
+  // Event detail
   const [eventName, setEventName] = useState("");
   const [eventPrice, setEventPrice] = useState(0);
   const [isFree, setIsFree] = useState(false);
@@ -23,28 +23,31 @@ export default function PaymentPage() {
   const [redeem, setRedeem] = useState<boolean>(false);
   const [useCoupon, setUseCoupon] = useState<boolean>(false);
 
+  // Ticket quantity form
+  const [ticketQty, setTicketQty] = useState<number>(1);
+
   // Top-up form
   const [topupAmount, setTopupAmount] = useState<number>(0);
 
-  // Feedback
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    if (!params.eventId) {
-      setMessage("No event ID found in URL.");
-      return;
-    }
+    // if (!params.eventId) {
+    //   setMessage("No event ID found in URL.");
+    //   return;
+    // }
     fetchEventDetail();
     fetchUserWallet();
     fetchUserPoints();
     fetchActiveCoupon();
-  }, [params.eventId]);
+  }, []);
 
   // 1) Fetch event detail
   async function fetchEventDetail() {
     try {
-      const res = await fetch(`http://localhost:8000/api/v1/events/${params.eventId}`);
+      const id = (await params).id;
+      const res = await fetch(`http://localhost:8000/api/v1/events/${id}`);
       const data = await res.json();
       if (res.ok && data.data) {
         setEventName(data.data.name);
@@ -66,8 +69,8 @@ export default function PaymentPage() {
         credentials: "include",
       });
       const data = await res.json();
-      if (res.ok && data.walletBalance !== undefined) {
-        setWalletBalance(data.walletBalance);
+      if (res.ok && data.wallet !== undefined) {
+        setWalletBalance(data.wallet);
       }
     } catch (err) {
       console.error(err);
@@ -93,7 +96,7 @@ export default function PaymentPage() {
   // 4) Fetch active coupon
   async function fetchActiveCoupon() {
     try {
-      const res = await fetch("http://localhost:8000/api/v1/points/active-coupon", {
+      const res = await fetch("http://localhost:8000/api/v1/active-coupon", {
         credentials: "include",
       });
       const data = await res.json();
@@ -109,9 +112,7 @@ export default function PaymentPage() {
     }
   }
 
-  // ================
   // handleTopUp
-  // ================
   async function handleTopUp(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -139,16 +140,14 @@ export default function PaymentPage() {
     }
   }
 
-  // ================
   // handlePayTicket
-  // ================
   async function handlePayTicket(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setMessage("");
-
     try {
-      const eventId = Number(params.eventId);
+      const id = (await params).id;
+      const eventId = Number(id);
       if (!eventId) {
         throw new Error("Invalid event ID");
       }
@@ -160,23 +159,50 @@ export default function PaymentPage() {
           eventId,
           redeem,
           useCoupon,
+          ticketQty,
         }),
       });
       const data = await res.json();
       if (!res.ok) {
         throw new Error(data.message || "Payment failed");
       }
+
       toast.success("Payment successful!", { autoClose: 1500 });
-      
       setTimeout(() => {
         router.push("/paymentsuccessful?success=true");
-      }, 1500);    } catch (error: any) {
-        toast.error("Error!", { autoClose: 3000 });
+      }, 1500);
+    } catch (error: any) {
+      toast.error(error.message, { autoClose: 3000 });
       setMessage(error.message);
     } finally {
       setLoading(false);
     }
   }
+
+  function getDiscountedPrice() {
+    // base price
+    const base = isFree ? 0 : eventPrice * ticketQty;
+
+    let priceAfterCoupon = base;
+    if (useCoupon && hasCoupon) {
+      // misal coupon disc = 10%
+      const disc = Math.floor(priceAfterCoupon * 0.1);
+      priceAfterCoupon = Math.max(priceAfterCoupon - disc, 0);
+    }
+
+    let finalPrice = priceAfterCoupon;
+    if (redeem && points > 0) {
+      if (points >= finalPrice) {
+        finalPrice = 0;
+      } else {
+        finalPrice = finalPrice - points;
+      }
+    }
+
+    return finalPrice;
+  }
+
+  const canRedeemPoints = points > 0;
 
   function formatIDR(num: number) {
     return "IDR " + num.toLocaleString("id-ID");
@@ -187,20 +213,47 @@ export default function PaymentPage() {
     return d.toLocaleDateString("id-ID");
   }
 
+  const computedPrice = isFree ? 0 : eventPrice * ticketQty;
+
+  const finalPriceEstimate = getDiscountedPrice();
+
   return (
     <div className="min-h-screen bg-gray-100 p-4">
-       <ToastContainer />
+      <ToastContainer />
       <div className="max-w-2xl mx-auto bg-white p-6 rounded shadow">
-        <h1 className="text-2xl font-bold mb-4">Payment Page for {eventName || "Event"}</h1>
+        <h1 className="text-2xl font-bold mb-4">
+          Payment Page for {eventName || "Event"}
+        </h1>
 
         {message && <p className="text-red-600 mb-2">{message}</p>}
+
+        {/* Set ticket Quantity */}
+        <div className="mb-4">
+          <label className="block font-medium">Ticket Quantity</label>
+          <input
+            type="number"
+            min={1}
+            value={ticketQty}
+            onChange={(e) => setTicketQty(Number(e.target.value))}
+            className="border p-2 rounded w-24"
+          />
+        </div>
+
+        {/* Display total price */}
+        <div className="mb-4">
+          <h2 className="font-semibold">Calculated Price (Client-Side)</h2>
+          <p className="text-xl text-green-700 font-bold">
+            {formatIDR(computedPrice)}
+          </p>
+          <p className="text-sm text-gray-500">(Estimated total)</p>
+        </div>
 
         <div className="mb-4">
           <h2 className="font-semibold">Event Price</h2>
           <p>{isFree ? "FREE" : formatIDR(eventPrice)}</p>
         </div>
 
-        {/* Wallet / Points / Coupon Info */}
+        {/* Wallet & Points & Coupon Info */}
         <div className="mb-4">
           <h2 className="font-semibold">Wallet Balance</h2>
           <p className="text-xl">{formatIDR(walletBalance)}</p>
@@ -216,9 +269,12 @@ export default function PaymentPage() {
         </div>
         {hasCoupon ? (
           <div className="mb-4">
-            <h2 className="text-purple-700 font-semibold">You have a 10% coupon!</h2>
+            <h2 className="text-purple-700 font-semibold">
+              You have a 10% coupon!
+            </h2>
             <p className="text-sm text-gray-500">
-              Valid until {couponExpires ? new Date(couponExpires).toDateString() : "-"}
+              Valid until{" "}
+              {couponExpires ? new Date(couponExpires).toDateString() : "-"}
             </p>
           </div>
         ) : (
@@ -261,14 +317,25 @@ export default function PaymentPage() {
             </div>
           )}
 
-          {/* redeem points */}
-          <div className="mb-4 flex items-center space-x-2">
-            <input
-              type="checkbox"
-              checked={redeem}
-              onChange={(e) => setRedeem(e.target.checked)}
-            />
-            <label>Redeem Points?</label>
+          {canRedeemPoints && (
+            <div className="mb-4 flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={redeem}
+                onChange={(e) => setRedeem(e.target.checked)}
+              />
+              <label>Redeem Points?</label>
+            </div>
+          )}
+
+          <div className="mb-4">
+            <h4 className="font-semibold">Estimated Final Price</h4>
+            <p className="text-xl text-blue-700 font-bold">
+              {formatIDR(finalPriceEstimate)}
+            </p>
+            <p className="text-xs text-gray-400">
+              (*This is a front-end estimate with coupon/points)
+            </p>
           </div>
 
           <button

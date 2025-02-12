@@ -1,8 +1,16 @@
 import { PrismaClient, Role } from "@prisma/client";
+import { genSalt, hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
+  // await prisma.category.deleteMany();
+  // await prisma.categoryEvent.deleteMany();
+  // await prisma.event.deleteMany();
+  // await prisma.confirmToken.deleteMany();
+  // await prisma.user.deleteMany();
+
+  const salt = await genSalt(10);
   const categories = await prisma.category.createMany({
     data: [
       {
@@ -82,6 +90,205 @@ async function main() {
   // Retrieve created categories
   const createdCategories = await prisma.category.findMany();
 
+
+  // // Manual dummy data for CUSTOMERS
+  // const customers = [
+  //   {
+  //     name: "Customer 1",
+  //     username: "customer1",
+  //     email: "customer1@example.com",
+  //     password: await hash("hashedpassword1", salt),
+  //     referralNumber: "CUST1REF1001",
+  //     role: Role.CUSTOMERS,
+  //     emailConfirmed: true,
+  //   },
+  //   {
+  //     name: "Customer 2",
+  //     username: "customer2",
+  //     email: "customer2@example.com",
+  //     password: await hash("hashedpassword2", salt),
+  //     referralNumber: "CUST2REF1002",
+  //     role: Role.CUSTOMERS,
+  //     emailConfirmed: true,
+  //   },
+  //   {
+  //     name: "Customer 3",
+  //     username: "customer3",
+  //     email: "customer3@example.com",
+  //     password: await hash("hashedpassword3", salt),
+  //     referralNumber: "CUST3REF1003",
+  //     role: Role.CUSTOMERS,
+  //     emailConfirmed: true,
+  //   },
+  //   {
+  //     name: "Customer 4",
+  //     username: "customer4",
+  //     email: "customer4@example.com",
+  //     password: await hash("hashedpassword4", salt),
+  //     referralNumber: "CUST4REF1004",
+  //     role: Role.CUSTOMERS,
+  //     emailConfirmed: true,
+  //   },
+  //   {
+  //     name: "Customer 5",
+  //     username: "customer5",
+  //     email: "customer5@example.com",
+  //     password: await hash("hashedpassword5", salt),
+  //     referralNumber: "CUST5REF1005",
+  //     role: Role.CUSTOMERS,
+  //     emailConfirmed: true,
+  //   },
+  //   {
+  //     name: "Customer 6",
+  //     username: "customer6",
+  //     email: "customer6@example.com",
+  //     password: await hash("hashedpassword6", salt),
+  //     referralNumber: "CUST6REF1006",
+  //     role: Role.CUSTOMERS,
+  //     emailConfirmed: true,
+  //   },
+  //   {
+  //     name: "Customer 7",
+  //     username: "customer7",
+  //     email: "customer7@example.com",
+  //     password: await hash("hashedpassword7", salt),
+  //     referralNumber: "CUST7REF1007",
+  //     role: Role.CUSTOMERS,
+  //     emailConfirmed: true,
+  //   },
+  //   {
+  //     name: "Customer 8",
+  //     username: "customer8",
+  //     email: "customer8@example.com",
+  //     password: await hash("hashedpassword8", salt),
+  //     referralNumber: "CUST8REF1008",
+  //     role: Role.CUSTOMERS,
+  //     emailConfirmed: true,
+  //   },
+  //   {
+  //     name: "Customer 9",
+  //     username: "customer9",
+  //     email: "customer9@example.com",
+  //     password: await hash("hashedpassword9", salt),
+  //     referralNumber: "CUST9REF1009",
+  //     role: Role.CUSTOMERS,
+  //     emailConfirmed: true,
+  //   },
+  //   {
+  //     name: "Customer 10",
+  //     username: "customer10",
+  //     email: "customer10@example.com",
+  //     password: await hash("hashedpassword10", salt),
+  //     referralNumber: "CUST10REF1010",
+  //     role: Role.CUSTOMERS,
+  //     emailConfirmed: true,
+  //   },
+  // ];
+
+  // // Manual dummy data for ORGANIZERS
+  // const organizers = [
+  //   {
+  //     name: "Organizer 1",
+  //     username: "organizer1",
+  //     email: "organizer1@example.com",
+  //     password: await hash("hashedpassword11", salt),
+  //     referralNumber: "ORG1REF2001",
+  //     role: Role.ORGANIZERS,
+  //     emailConfirmed: true,
+  //   },
+  //   {
+  //     name: "Organizer 2",
+  //     username: "organizer2",
+  //     email: "organizer2@example.com",
+  //     password: await hash("hashedpassword12", salt),
+  //     referralNumber: "ORG2REF2002",
+  //     role: Role.ORGANIZERS,
+  //     emailConfirmed: true,
+  //   },
+  //   {
+  //     name: "Organizer 3",
+  //     username: "organizer3",
+  //     email: "organizer3@example.com",
+  //     password: await hash("hashedpassword13", salt),
+  //     referralNumber: "ORG3REF2003",
+  //     role: Role.ORGANIZERS,
+  //     emailConfirmed: true,
+  //   },
+  //   {
+  //     name: "Organizer 4",
+  //     username: "organizer4",
+  //     email: "organizer4@example.com",
+  //     password: await hash("hashedpassword14", salt),
+  //     referralNumber: "ORG4REF2004",
+  //     role: Role.ORGANIZERS,
+  //     emailConfirmed: true,
+  //   },
+  //   {
+  //     name: "Organizer 5",
+  //     username: "organizer5",
+  //     email: "organizer5@example.com",
+  //     password: await hash("hashedpassword15", salt),
+  //     referralNumber: "ORG5REF2005",
+  //     role: Role.ORGANIZERS,
+  //     emailConfirmed: true,
+  //   },
+  //   {
+  //     name: "Organizer 6",
+  //     username: "organizer6",
+  //     email: "organizer6@example.com",
+  //     password: await hash("hashedpassword16", salt),
+  //     referralNumber: "ORG6REF2006",
+  //     role: Role.ORGANIZERS,
+  //     emailConfirmed: true,
+  //   },
+  //   {
+  //     name: "Organizer 7",
+  //     username: "organizer7",
+  //     email: "organizer7@example.com",
+  //     password: await hash("hashedpassword17", salt),
+  //     referralNumber: "ORG7REF2007",
+  //     role: Role.ORGANIZERS,
+  //     emailConfirmed: true,
+  //   },
+  //   {
+  //     name: "Organizer 8",
+  //     username: "organizer8",
+  //     email: "organizer8@example.com",
+  //     password: await hash("hashedpassword18", salt),
+  //     referralNumber: "ORG8REF2008",
+  //     role: Role.ORGANIZERS,
+  //     emailConfirmed: true,
+  //   },
+  //   {
+  //     name: "Organizer 9",
+  //     username: "organizer9",
+  //     email: "organizer9@example.com",
+  //     password: await hash("hashedpassword19", salt),
+  //     referralNumber: "ORG9REF2009",
+  //     role: Role.ORGANIZERS,
+  //     emailConfirmed: true,
+  //   },
+  //   {
+  //     name: "Organizer 10",
+  //     username: "organizer10",
+  //     email: "organizer10@example.com",
+  //     password: await hash("hashedpassword20", salt),
+  //     referralNumber: "ORG10REF2010",
+  //     role: Role.ORGANIZERS,
+  //     emailConfirmed: true,
+  //   },
+  // ];
+
+  // // Insert all customers
+  // for (const customer of customers) {
+  //   await prisma.user.create({ data: customer });
+  // }
+
+  // // Insert all organizers
+  // for (const organizer of organizers) {
+  //   await prisma.user.create({ data: organizer });
+  // }
+
   // Create Events
   const events = await prisma.event.createMany({
     data: [
@@ -96,9 +303,9 @@ async function main() {
         image:
           "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158875/rock_ih2gbg.jpg",
         availableSeats: 1000,
-        isFree: true,
+        isFree: false,
         slug: "rock-night-live",
-        organizerId:64
+        organizerId: 85,
       },
       {
         name: "Basketball Championship",
@@ -112,9 +319,9 @@ async function main() {
         image:
           "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158874/basketball_eeylrl.jpg",
         availableSeats: 5000,
-        isFree: true,
+        isFree: false,
         slug: "basketball-championship",
-        organizerId: 55
+        organizerId: 86,
       },
       {
         name: "Tech Innovators Conference",
@@ -123,13 +330,13 @@ async function main() {
           "Join leading experts and innovators to discuss the future of technology.",
         location: "Convention Center",
         date: new Date("2025-10-10T09:00:00Z"),
-        price: 200000.0,
+        price: 0,
         image:
           "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158875/tech_renhfh.jpg",
         availableSeats: 2000,
         isFree: true,
         slug: "tech-innovators-conference",
-        organizerId: 56
+        organizerId: 87,
       },
       {
         name: "Art Exhibition Modern",
@@ -143,7 +350,7 @@ async function main() {
         availableSeats: 500,
         isFree: false,
         slug: "art-exhibition-modern",
-        organizerId: 57
+        organizerId: 88,
       },
       {
         name: "Business Management Seminar",
@@ -158,7 +365,7 @@ async function main() {
         availableSeats: 300,
         isFree: false,
         slug: "business-management-seminar",
-        organizerId: 58
+        organizerId: 89,
       },
       {
         name: "Food Festival",
@@ -172,7 +379,7 @@ async function main() {
         availableSeats: 1000,
         isFree: false,
         slug: "food-festival",
-        organizerId: 59
+        organizerId: 90,
       },
       {
         name: "Automobile Show",
@@ -186,7 +393,7 @@ async function main() {
         availableSeats: 2000,
         isFree: false,
         slug: "automobile-show",
-        organizerId: 60
+        organizerId: 91,
       },
       {
         name: "Film Concert",
@@ -200,7 +407,7 @@ async function main() {
         availableSeats: 800,
         isFree: false,
         slug: "film-concert",
-        organizerId: 61
+        organizerId: 92,
       },
       {
         name: "Fashion Show Latest",
@@ -214,7 +421,7 @@ async function main() {
         availableSeats: 600,
         isFree: false,
         slug: "fashion-show",
-        organizerId: 62
+        organizerId: 93,
       },
       {
         name: "Theater Concert",
@@ -228,7 +435,7 @@ async function main() {
         availableSeats: 700,
         isFree: false,
         slug: "theater-concert",
-        organizerId: 63
+        organizerId: 94,
       },
     ],
   });
@@ -246,206 +453,8 @@ async function main() {
     });
   }
 
-  
-  // Manual dummy data for CUSTOMERS
-  const customers = [
-    {
-      name: "Customer 1",
-      username: "customer1",
-      email: "customer1@example.com",
-      password: "hashedpassword1",
-      referralNumber: "CUST1REF1001",
-      role: Role.CUSTOMERS,
-      emailConfirmed: true,
-    },
-    {
-      name: "Customer 2",
-      username: "customer2",
-      email: "customer2@example.com",
-      password: "hashedpassword2",
-      referralNumber: "CUST2REF1002",
-      role: Role.CUSTOMERS,
-      emailConfirmed: true,
-    },
-    {
-      name: "Customer 3",
-      username: "customer3",
-      email: "customer3@example.com",
-      password: "hashedpassword3",
-      referralNumber: "CUST3REF1003",
-      role: Role.CUSTOMERS,
-      emailConfirmed: true,
-    },
-    {
-      name: "Customer 4",
-      username: "customer4",
-      email: "customer4@example.com",
-      password: "hashedpassword4",
-      referralNumber: "CUST4REF1004",
-      role: Role.CUSTOMERS,
-      emailConfirmed: true,
-    },
-    {
-      name: "Customer 5",
-      username: "customer5",
-      email: "customer5@example.com",
-      password: "hashedpassword5",
-      referralNumber: "CUST5REF1005",
-      role: Role.CUSTOMERS,
-      emailConfirmed: true,
-    },
-    {
-      name: "Customer 6",
-      username: "customer6",
-      email: "customer6@example.com",
-      password: "hashedpassword6",
-      referralNumber: "CUST6REF1006",
-      role: Role.CUSTOMERS,
-      emailConfirmed: true,
-    },
-    {
-      name: "Customer 7",
-      username: "customer7",
-      email: "customer7@example.com",
-      password: "hashedpassword7",
-      referralNumber: "CUST7REF1007",
-      role: Role.CUSTOMERS,
-      emailConfirmed: true,
-    },
-    {
-      name: "Customer 8",
-      username: "customer8",
-      email: "customer8@example.com",
-      password: "hashedpassword8",
-      referralNumber: "CUST8REF1008",
-      role: Role.CUSTOMERS,
-      emailConfirmed: true,
-    },
-    {
-      name: "Customer 9",
-      username: "customer9",
-      email: "customer9@example.com",
-      password: "hashedpassword9",
-      referralNumber: "CUST9REF1009",
-      role: Role.CUSTOMERS,
-      emailConfirmed: true,
-    },
-    {
-      name: "Customer 10",
-      username: "customer10",
-      email: "customer10@example.com",
-      password: "hashedpassword10",
-      referralNumber: "CUST10REF1010",
-      role: Role.CUSTOMERS,
-      emailConfirmed: true,
-    },
-  ];
-  
-  // Manual dummy data for ORGANIZERS
-  const organizers = [
-    {
-      name: "Organizer 1",
-      username: "organizer1",
-      email: "organizer1@example.com",
-      password: "hashedpassword11",
-      referralNumber: "ORG1REF2001",
-      role: Role.ORGANIZERS,
-      emailConfirmed: true,
-    },
-    {
-      name: "Organizer 2",
-      username: "organizer2",
-      email: "organizer2@example.com",
-      password: "hashedpassword12",
-      referralNumber: "ORG2REF2002",
-      role: Role.ORGANIZERS,
-      emailConfirmed: true,
-    },
-    {
-      name: "Organizer 3",
-      username: "organizer3",
-      email: "organizer3@example.com",
-      password: "hashedpassword13",
-      referralNumber: "ORG3REF2003",
-      role: Role.ORGANIZERS,
-      emailConfirmed: true,
-    },
-    {
-      name: "Organizer 4",
-      username: "organizer4",
-      email: "organizer4@example.com",
-      password: "hashedpassword14",
-      referralNumber: "ORG4REF2004",
-      role: Role.ORGANIZERS,
-      emailConfirmed: true,
-    },
-    {
-      name: "Organizer 5",
-      username: "organizer5",
-      email: "organizer5@example.com",
-      password: "hashedpassword15",
-      referralNumber: "ORG5REF2005",
-      role: Role.ORGANIZERS,
-      emailConfirmed: true,
-    },
-    {
-      name: "Organizer 6",
-      username: "organizer6",
-      email: "organizer6@example.com",
-      password: "hashedpassword16",
-      referralNumber: "ORG6REF2006",
-      role: Role.ORGANIZERS,
-      emailConfirmed: true,
-    },
-    {
-      name: "Organizer 7",
-      username: "organizer7",
-      email: "organizer7@example.com",
-      password: "hashedpassword17",
-      referralNumber: "ORG7REF2007",
-      role: Role.ORGANIZERS,
-      emailConfirmed: true,
-    },
-    {
-      name: "Organizer 8",
-      username: "organizer8",
-      email: "organizer8@example.com",
-      password: "hashedpassword18",
-      referralNumber: "ORG8REF2008",
-      role: Role.ORGANIZERS,
-      emailConfirmed: true,
-    },
-    {
-      name: "Organizer 9",
-      username: "organizer9",
-      email: "organizer9@example.com",
-      password: "hashedpassword19",
-      referralNumber: "ORG9REF2009",
-      role: Role.ORGANIZERS,
-      emailConfirmed: true,
-    },
-    {
-      name: "Organizer 10",
-      username: "organizer10",
-      email: "organizer10@example.com",
-      password: "hashedpassword20",
-      referralNumber: "ORG10REF2010",
-      role: Role.ORGANIZERS,
-      emailConfirmed: true,
-    },
-  ];
-  
-  // Insert all customers
-  for (const customer of customers) {
-    await prisma.user.create({ data: customer });
-  }
-  
-  // Insert all organizers
-  for (const organizer of organizers) {
-    await prisma.user.create({ data: organizer });
-  }
 
-  console.log("Seed data inserted successfully.");
+  console.info("Seed data inserted successfully.");
 }
 
 main()
