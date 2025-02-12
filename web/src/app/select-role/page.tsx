@@ -1,13 +1,31 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import router from "next/router";
+
+
 
 export default function SelectRolePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    checkRole();
+  }, []);
+  
+  async function checkRole() {
+    const res = await fetch("http://localhost:8000/api/v1/auth/me", { credentials: "include" });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.role !== "UNSET") {
+        if (data.role === "CUSTOMERS") router.push("/home-customers");
+        else router.push("/home-organizers");
+      }
+    }
+  }
 
   async function handleRoleSelection(role: "CUSTOMERS" | "ORGANIZERS") {
     setLoading(true);

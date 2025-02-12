@@ -23,8 +23,6 @@ function dateToCron(dateInput: Date) {
 //         data: { published: true },
 //       });
 
-//       console.log(`event with id ${eventId} has been published!`);
-
 //       eventJob.stop();
 //     } catch (error) {
 //       console.error(error);

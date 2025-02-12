@@ -104,7 +104,7 @@ export async function checkoutTicket(
     let totalDiscount = 0;
 
     if (!coupons) {
-      console.log("No valid coupons available.");
+      console.error("No valid coupons available.");
     }
 
     const totalPoints = points.reduce(

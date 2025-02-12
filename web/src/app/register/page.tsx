@@ -15,7 +15,7 @@ export default function RegisterPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("CUSTOMERS");
+  const [role, setRole] = useState("UNSET");
   const [referralCode, setReferralCode] = useState("");
 
   const [loading, setLoading] = useState(false);
@@ -59,7 +59,7 @@ export default function RegisterPage() {
       setUsername("");
       setEmail("");
       setPassword("");
-      setRole("CUSTOMERS");
+      setRole("UNSET");
       setReferralCode("");
 
       router.push("/email-confirmation");

@@ -10,10 +10,10 @@ import { roleGuard, verifyToken } from "../middleware/auth-middleware";
 
 const router = express.Router();
 
-router.route("/").get(GetAllEvents).post(upload.single("image"), CreateEvent);
-// verifyToken,
-// roleGuard("ORGANIZERS"),
-
+router
+  .route("/")
+  .get(GetAllEvents)
+  .post(verifyToken, roleGuard("ORGANIZERS"), upload.single("image"));
 router.route("/:id").get(GetSingleEvent);
 
 export default router;

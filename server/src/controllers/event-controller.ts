@@ -182,6 +182,7 @@ export async function GetAllEvents(
   }
 }
 
+
 export async function GetSingleEvent(
   req: Request,
   res: Response,

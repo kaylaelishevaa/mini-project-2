@@ -3,8 +3,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Footer from "@/components/footer";
-import Navbar from "@/components/navbar";
 
 // Define the Event interface here
 interface Event {
@@ -40,8 +38,10 @@ const EventDetail = ({ params }) => {
         }
         const data = await response.json();
         setEvent(data.data);
-      } catch (err) {
-        setError(err.message);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        }
       } finally {
         setLoading(false);
       }
@@ -64,7 +64,6 @@ const EventDetail = ({ params }) => {
 
   return (
     <section>
-      <Navbar />
       <div className="max-w-5xl mx-auto pt-14">
         {/* Back Button */}
         <button className="mb-6 flex items-center">
@@ -214,7 +213,6 @@ const EventDetail = ({ params }) => {
           </div>
         </div>
       </div>
-      <Footer />
     </section>
   );
 };

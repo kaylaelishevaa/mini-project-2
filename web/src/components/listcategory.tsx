@@ -4,36 +4,36 @@
 // import Link from "next/link";
 // import Image from "next/image";
 
-// const ListCategory = () => {
-//   const [categories, setCategories] = useState({ data: [] }); // Initialize state with an object containing a 'data' property
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-//   const [currentPage, setCurrentPage] = useState(1);
-//   const categoriesPerPage = 4;
+const ListCategory = () => {
+  const [categories, setCategories] = useState({ data: [] }); // Initialize state with an object containing a 'data' property
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const categoriesPerPage = 4;
 
-//   useEffect(() => {
-//     const fetchCategories = async () => {
-//       try {
-//         const response = await fetch("http://localhost:8000/api/v1/categories");
-//         if (!response.ok) {
-//           throw new Error("Network response was not ok");
-//         }
-//         const data = await response.json();
-//         console.log("Data received from API:", data); // Log the data to the console
-//         if (data && Array.isArray(data.data)) {
-//           // Check if 'data' property exists and is an array
-//           setCategories(data);
-//         } else {
-//           throw new Error(
-//             "Data received from API is not in the expected format"
-//           );
-//         }
-//       } catch (error) {
-//         setError(error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api/v1/categories");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+
+        if (data && Array.isArray(data.data)) {
+          // Check if 'data' property exists and is an array
+          setCategories(data);
+        } else {
+          throw new Error(
+            "Data received from API is not in the expected format"
+          );
+        }
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
 //     fetchCategories();
 //   }, []);

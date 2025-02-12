@@ -17,7 +17,7 @@ const ListCategory = () => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        console.log("Data received from API:", data); // Log the data to the console
+
         if (data && Array.isArray(data.data)) {
           // Check if 'data' property exists and is an array
           setCategories(data);

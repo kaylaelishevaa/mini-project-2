@@ -48,8 +48,7 @@ const TicketBookingPage = () => {
           // Logic to create order
           const id = 10;
 
-          router.push(`/payment?id=${id}`);
-          console.log("Pay!");
+          router.push(`/payment/${id}`);
         }}
         className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6"
       >

@@ -56,7 +56,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
         secure: false,
       })
       .status(200)
-      .json({ ok: true, message: "Login succeded!" });
+      .json({ ok: true, message: "Login succeded!", role: existingUser.role });
   } catch (error) {
     next(error);
   }
@@ -88,7 +88,6 @@ export async function updateRole(
   try {
     const userId = req.user?.id;
 
-    console.log(`the user id is ${userId}`);
     if (!userId) {
       res.status(401).json({ message: "Unauthorized" });
       return;
@@ -107,19 +106,19 @@ export async function updateRole(
     });
 
     if (role !== "CUSTOMERS") {
-        await prisma.point.deleteMany({
-          where: { userId },
-        });
-  
-        await prisma.coupon.deleteMany({
-          where: { userId },
-        });
-  
-        await prisma.user.update({
-          where: { id: userId },
-          data: { referralNumber: "" },
-        });
-      }
+      await prisma.point.deleteMany({
+        where: { userId },
+      });
+
+      await prisma.coupon.deleteMany({
+        where: { userId },
+      });
+
+      await prisma.user.update({
+        where: { id: userId },
+        data: { referralNumber: "" },
+      });
+    }
 
     res.status(200).json({ message: "Role updated successfully" });
   } catch (error) {
@@ -134,6 +133,7 @@ export async function getCurrentUser(
 ) {
   try {
     const userId = req.user?.id;
+    
     if (!userId) {
       res.status(401).json({ message: "Unauthorized" });
       return;

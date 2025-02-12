@@ -248,10 +248,6 @@ export default function PaymentSuccessPage() {
 
         {/* Action Buttons */}
         <div className="space-y-4">
-          <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors">
-            Download E-Ticket
-          </button>
-
           <div className="grid grid-cols-1 gap-4">
             <Link
               href="/eventlisting"

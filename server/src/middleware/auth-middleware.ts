@@ -8,13 +8,13 @@ export async function verifyToken(
   next: NextFunction
 ) {
   try {
+    console.log("=> verifyToken middleware is called");
+    console.log("Cookies found:", req.cookies);
     const token = req.cookies.token;
 
     if (!token) {
       res.status(401).json({ message: "No token provided!!!!" });
       return;
-    } else {
-      console.log("Token found:", token);
     }
 
     const verifiedUser = jwt.verify(
@@ -22,7 +22,11 @@ export async function verifyToken(
       process.env.JWT_SECRET_KEY as string
     ) as CustomJWTPayload;
 
+    console.log(verifiedUser)
+    console.log(token)
+    
     req.user = verifiedUser;
+
 
     next();
   } catch (error) {
@@ -33,7 +37,6 @@ export async function verifyToken(
 export function roleGuard(role: string) {
   return async function (req: Request, res: Response, next: NextFunction) {
     try {
-      console.log(role);
       if (req.user?.role !== role) {
         res.status(401).json({ message: "Unauthorized access. Forbidden!" });
         return;
@@ -45,5 +48,3 @@ export function roleGuard(role: string) {
     }
   };
 }
-
-

@@ -16,6 +16,7 @@ datasource db {
 enum Role {
   CUSTOMERS
   ORGANIZERS
+  UNSET
 }
 
 model User {
@@ -97,7 +98,7 @@ model Event {
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
 
-  organizer     User            @relation(fields: [organizerId], references: [id])
+  organizer     User            @relation(fields: [organizerId], references: [id], onDelete: Cascade)
   registrations Registration[]
   transactions  Transaction[]
   CategoryEvent CategoryEvent[]
@@ -134,7 +135,7 @@ model Promotion {
   referralCode  String?
   validUntil    DateTime
 
-  event Event @relation(fields: [eventId], references: [id])
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Attendee {
@@ -145,7 +146,7 @@ model Attendee {
   hasPaid      Boolean @default(false)
   referralCode String?
 
-  event Event @relation(fields: [eventId], references: [id])
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model EventReview {
@@ -163,8 +164,8 @@ model Registration {
   userId    Int
   createdAt DateTime @default(now())
 
-  event Event @relation(fields: [eventId], references: [id])
-  user  User  @relation(fields: [userId], references: [id])
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   Transaction Transaction[]
 }
@@ -177,8 +178,8 @@ model Transaction {
   registrationId Int
 
   // Example relation: A transaction might be tied to an event or a registration
-  event        Event         @relation(fields: [eventId], references: [id])
-  registration Registration? @relation(fields: [registrationId], references: [id])
+  event        Event         @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  registration Registration? @relation(fields: [registrationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 //User - Referral = one to many
