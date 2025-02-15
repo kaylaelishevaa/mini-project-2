@@ -11,6 +11,10 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        
+      },
+      fontFamily: {
+        lexend: ["Lexend", "sans-serif"],
       },
     },
   },

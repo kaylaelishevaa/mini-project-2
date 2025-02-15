@@ -8,8 +8,6 @@ export async function verifyToken(
   next: NextFunction
 ) {
   try {
-    console.log("=> verifyToken middleware is called");
-    console.log("Cookies found:", req.cookies);
     const token = req.cookies.token;
 
     if (!token) {
@@ -21,9 +19,6 @@ export async function verifyToken(
       token,
       process.env.JWT_SECRET_KEY as string
     ) as CustomJWTPayload;
-
-    console.log(verifiedUser)
-    console.log(token)
     
     req.user = verifiedUser;
 

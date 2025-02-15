@@ -79,10 +79,7 @@ export default function Navbar() {
           </div>
 
           <div className="hidden md:flex space-x-4">
-            <Link
-              href="/eventlisting"
-              className="text-white hover:text-blue-400"
-            >
+            <Link href="/eventlisting" className="text-white hover:text-blue-400">
               Find Events
             </Link>
             <Link href="/categories" className="text-white hover:text-blue-400">
@@ -117,10 +114,7 @@ export default function Navbar() {
           </div>
 
           <div className="hidden md:flex space-x-4 items-center">
-            <Link
-              href="/eventlisting"
-              className="text-white hover:text-blue-400"
-            >
+            <Link href="/eventlisting" className="text-white hover:text-blue-400">
               Find Events
             </Link>
             <Link href="/categories" className="text-white hover:text-blue-400">
@@ -170,10 +164,7 @@ export default function Navbar() {
 
           <div className="hidden md:flex space-x-4 items-center">
             {/* Create Event (only for organizers) */}
-            <Link
-              href="/event/create"
-              className="text-white hover:text-blue-400"
-            >
+            <Link href="/event/create" className="text-white hover:text-blue-400">
               Create Events
             </Link>
 
@@ -200,5 +191,4 @@ export default function Navbar() {
         )}
       </nav>
     );
-  }
-}
+  }}
