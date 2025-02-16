@@ -30,10 +30,9 @@ export default function LogoutModal({ onClose, onLogoutSuccess }: LogoutModalPro
       }
 
       // Tutuplah modal + optional redirect
-      setTimeout(() => {
         onClose();
         router.push("/");  
-      }, 1000);
+    ;
     } catch (error: unknown) {
       if (error instanceof Error) {
         setMessage(error.message);
@@ -50,7 +49,7 @@ export default function LogoutModal({ onClose, onLogoutSuccess }: LogoutModalPro
       <div className="bg-white shadow-md rounded p-6 w-full max-w-sm text-center">
         <h2 className="text-2xl font-bold mb-4">Logout</h2>
         <p className="mb-6 text-sm text-gray-600">
-          Are you sure you want to log out from Event Management Platform?
+          Are you sure you want to log out from Happenings Hub?
         </p>
 
         <div className="flex items-center justify-center space-x-4">

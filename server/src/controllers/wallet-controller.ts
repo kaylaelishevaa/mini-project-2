@@ -1,4 +1,3 @@
-// controllers/wallet-controller.ts
 import { Request, Response, NextFunction } from "express";
 import { PrismaClient } from "@prisma/client";
 import { exitCode } from "node:process";
@@ -32,7 +31,28 @@ export async function payTicket(
       return;
     }
 
-    let ticketPrice = event.isFree ? 0 : event.price * quantity;
+    // === CHECK: APABILA EVENT GRATIS ===
+    if (event.isFree || Number(event.price) === 0) {
+      // Buat registration tanpa transaction
+      const registration = await prisma.registration.create({
+        data: {
+          eventId: event.id,
+          userId,
+        },
+      });
+
+      // Tanggapi ke client bahwa event gratis => no transaction needed
+      res.status(201).json({
+        message:
+          "Registration successful (FREE EVENT). No transaction created.",
+        registration,
+      });
+    }
+    // === EVENT BERBAYAR (LANJUTKAN PROSES PEMBAYARAN) ===
+
+    let ticketPrice = Number(event.price) * quantity;
+    console.log(event);
+    console.log("1 => ticketPrice:", ticketPrice);
 
     // 2) Cek user => wallet
     const user = await prisma.user.findUnique({ where: { id: userId } });
@@ -52,7 +72,9 @@ export async function payTicket(
       if (coupon) {
         couponDiscount = Math.floor((ticketPrice * coupon.discount) / 100);
         ticketPrice = Math.max(ticketPrice - couponDiscount, 0);
+        console.log("2 => ticketPrice after coupon:", ticketPrice);
 
+        // Tandai coupon sebagai sudah terpakai (hapus record atau update 'used' field)
         usedCouponId = coupon.id;
       }
     }
@@ -65,6 +87,7 @@ export async function payTicket(
         orderBy: { expiresAt: "asc" },
       });
       const sumPoints = userPoints.reduce((acc, p) => acc + p.pointsEarned, 0);
+      console.log("User total points =>", sumPoints);
 
       if (sumPoints > 0) {
         if (sumPoints >= ticketPrice) {
@@ -141,6 +164,7 @@ export async function payTicket(
         });
         return;
       }
+      console.log("HELLO" + user?.walletBalance);
 
       await prisma.user.update({
         where: { id: userId },
@@ -159,7 +183,7 @@ export async function payTicket(
     });
 
     // 8) Buat Transaction
-    const originalPrice = event.isFree ? 0 : event.price * quantity;
+    const originalPrice = event.isFree ? 0 : Number(event.price) * quantity;
     const finalTransactionAmount = Math.max(
       originalPrice - couponDiscount - totalPointsUsed - voucherDiscount,
       0
@@ -174,6 +198,7 @@ export async function payTicket(
       },
     });
 
+    // Hapus coupon jika dipakai
     if (usedCouponId) {
       await prisma.coupon.delete({ where: { id: usedCouponId } });
     }
@@ -194,6 +219,7 @@ export async function payTicket(
       },
     });
 
+    // 8) Response
     res.status(200).json({
       message: "Payment successful!",
       originalTicketPrice: originalPrice,
@@ -204,7 +230,7 @@ export async function payTicket(
       finalPricePaid: finalTransactionAmount,
       leftoverToPay: ticketPrice,
       newWalletBalance: user.walletBalance - walletUsed,
-      quantity,
+      registrationId: registration.id,
     });
   } catch (error) {
     next(error);

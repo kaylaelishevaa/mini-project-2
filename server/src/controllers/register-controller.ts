@@ -111,7 +111,7 @@ export async function register(
       confirmationLink: confirmationLink,
     });
     const { error } = await resend.emails.send({
-      from: "Event Management Platform <onboarding@resend.dev>",
+      from: "Happenings Hub <onboarding@resend.dev>",
       to: email,
       subject: "Confirmation Email",
       html: htmlTemplate,

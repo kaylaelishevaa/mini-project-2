@@ -12,7 +12,7 @@ export async function verifyToken(
     console.log(token);
 
     if (!token) {
-      res.status(401).json({ message: "No token provided" });
+      res.status(401).json({ message: "Please login first!" });
       return;
     }
 
@@ -20,6 +20,7 @@ export async function verifyToken(
       token,
       process.env.JWT_SECRET_KEY as string
     ) as CustomJWTPayload;
+
 
     if (!verifiedUser) {
       res.status(401).json({ message: "Invalid token" });

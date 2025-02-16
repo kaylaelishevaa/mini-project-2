@@ -37,7 +37,7 @@ export default function LogoutPage() {
         
         <h2 className="text-2xl font-bold mb-4">Logout</h2>
         <p className="mb-6 text-sm text-gray-600">
-          Are you sure you want to log out from Event Management Platform?
+          Are you sure you want to log out from Happenings Hub?
         </p>
 
         <div className="flex items-center justify-center space-x-4">

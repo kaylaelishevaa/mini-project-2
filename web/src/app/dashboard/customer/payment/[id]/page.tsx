@@ -1,10 +1,16 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 
-export default function PaymentPage({ params }) {
+interface PaymentPageProps {
+  params: {
+    id: number; // atau number, tergantung kebutuhanmu
+  };
+}
+
+export default function PaymentPage({ params }: PaymentPageProps) {
   const router = useRouter();
 
   // Event detail
@@ -130,9 +136,11 @@ export default function PaymentPage({ params }) {
       setMessage(data.message);
       setWalletBalance(data.newWalletBalance);
       setTopupAmount(0);
-    } catch (error: any) {
-      setMessage(error.message);
-      toast.error("Error!", { autoClose: 3000 });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error("Error!", { autoClose: 3000 });
+        setMessage(error.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -169,11 +177,13 @@ export default function PaymentPage({ params }) {
 
       toast.success("Payment successful!", { autoClose: 1500 });
       setTimeout(() => {
-        router.push("/paymentsuccessful?success=true");
+        router.push("/home-customer");
       }, 1500);
-    } catch (error: any) {
-      toast.error(error.message, { autoClose: 3000 });
-      setMessage(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message, { autoClose: 3000 });
+        setMessage(error.message);
+      }
     } finally {
       setLoading(false);
     }

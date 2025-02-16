@@ -28,6 +28,20 @@ export async function confirmEmail(
       res.status(400).json({ message: "Invalid or expired token!" });
       return;
     }
+    
+    const user = await prisma.user.findUnique({
+      where: { id: tokenRecord.userId },
+    });
+
+    if (!user) {
+      res.status(404).json({ message: "User not found!" });
+      return
+    }
+
+    if (user.emailConfirmed) {
+      res.status(404).json({ message: "Page not found!" });
+      return
+    }
 
     await prisma.confirmToken.update({
       where: { id: tokenRecord.id },
@@ -99,7 +113,7 @@ export async function confirmEmail(
       Awesome—your email has been successfully verified. 
       You can now head back and log in to get started.
     </p>
-    <a href="http://localhost:3000/login" class="button">Go to Login</a>
+    <a href="http://localhost:3001/login" class="button">Go to Login</a>
     <div class="footer">
       <p>&copy; 2025 Resend Platform. All rights reserved.</p>
     </div>
@@ -138,3 +152,37 @@ export async function checkEmailStatus(
     next(error);
   }
 }
+
+// export async function checkEmailStatus(
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) {
+//   try {
+//     const userId = req.user?.id;
+//     // Jika tidak ada userId (belum login), boleh balas 401 unauthorized
+//     if (!userId) {
+//       res.status(401).json({ message: "Unauthorized" });
+//       return
+//     }
+
+//     // Cari user di database
+//     const user = await prisma.user.findUnique({
+//       where: { id: userId },
+//     });
+
+//     // Kalau user benar-benar tidak ditemukan => 404
+//     if (!user) {
+//       res.status(404).json({ message: "User not found" });
+//       return
+//     }
+
+//     // Kembalikan status emailConfirmed apa adanya
+//     res.status(200).json({
+//       emailConfirmed: user.emailConfirmed,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// }
+

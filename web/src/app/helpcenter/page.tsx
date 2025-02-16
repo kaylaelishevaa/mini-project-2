@@ -1,38 +1,12 @@
 import React from "react";
-import Image from "next/image";
 
 export default function HelpCenter() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 mt-10">
-      <section className="relative flex flex-col items-center justify-center h-56 bg-cover bg-center">
-        <div className="absolute inset-0 h-56">
-          <Image
-            src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            alt="Landing Page Photo"
-            fill
-            className="object-cover"
-          />
-        </div>
-
-        <div className="container relative z-10 flex flex-col items-center mx-auto space-y-8 text-white text-center lg:flex-row lg:space-y-0 lg:space-x-12 justify-center">
-          <div className="w-full lg:w-1/2 flex flex-col items-center justify-center text-center">
-            <h1 className="text-5xl sm:text-6xl md:text-6xl lg:text-6xl xl:text-6xl font-bold tracking-wide leading-tight">
-              HELP CENTER
-            </h1>
-
-            <div className="mt-6 space-y-4">
-              <p className="text-base sm:text-lg md:text-xl">
-                A Help Center is a vital resource for both customers and
-                businesses, providing essential support and information.
-              </p>
-            </div>
-            <div className="flex flex-col gap-4 mt-6 sm:flex-row justify-center"></div>
-          </div>
-        </div>
-      </section>
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl gap-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl">
+        <h1 className="text-3xl font-bold mb-6 text-center">Help Center</h1>
         <p className="text-gray-700 text-lg mb-8 text-center">
-          Welcome to the Event Management Help Center! Here you can find answers
+          Welcome to the Happenings Hub Help Center! Here you can find answers
           to common questions and resources to help you navigate the platform.
         </p>
 
@@ -41,54 +15,84 @@ export default function HelpCenter() {
         </h2>
 
         <div className="space-y-4">
+          {/* Event Discovery & Booking */}
           <div className="border-b border-gray-200 pb-4">
             <h3 className="text-xl font-semibold mb-2">
-              How do I create an event?
+              How can I find and book events?
             </h3>
             <p className="text-gray-700">
-              To create an event, go to the events section, click on Create
-              Event and fill in the required details.
+              You can explore upcoming events by using the search bar, filters, 
+              and categories. Once you find an event you like, click on it to 
+              view details and purchase tickets if required.
             </p>
           </div>
 
+          {/* Ticket Purchases */}
           <div className="border-b border-gray-200 pb-4">
             <h3 className="text-xl font-semibold mb-2">
-              How do I invite participants to my event?
+              How do I purchase event tickets?
             </h3>
             <p className="text-gray-700">
-              You can invite participants by sharing the event link or using the
-              Invite feature in the event settings.
+              When you find an event you want to attend, click the -Buy Ticket-
+              button. If the event is free, you can register without payment. 
+              For paid events, complete the payment using IDR as the currency.
             </p>
           </div>
 
+          {/* Discounts & Referral Codes */}
           <div className="border-b border-gray-200 pb-4">
             <h3 className="text-xl font-semibold mb-2">
-              How do I manage event registrations?
+              How do I use referral codes and get discounts?
             </h3>
             <p className="text-gray-700">
-              You can manage event registrations through the Registration tab in
-              the event dashboard.
+              If you register with a referral code, you will receive a **10% discount** 
+              for your first purchase. The discount will be valid for 3 months. 
+              You can also share your referral number with others to earn points.
             </p>
           </div>
 
+          {/* Points & Rewards */}
           <div className="border-b border-gray-200 pb-4">
             <h3 className="text-xl font-semibold mb-2">
-              How do I add a referral code?
+              How do I earn and redeem points?
             </h3>
             <p className="text-gray-700">
-              You can add a referral code in the settings section of your
-              account.
+              Every time someone registers using your referral code, you earn **10,000 points**. 
+              Points expire after **3 months** and can be redeemed to get discounts on ticket purchases.
             </p>
           </div>
 
+          {/* Event Reviews */}
+          <div className="border-b border-gray-200 pb-4">
+            <h3 className="text-xl font-semibold mb-2">
+              Can I leave a review for an event?
+            </h3>
+            <p className="text-gray-700">
+              Yes! After attending an event, you can leave a review and rate it 
+              based on your experience. Your feedback helps organizers improve 
+              future events.
+            </p>
+          </div>
+
+          {/* User Accounts */}
+          <div className="border-b border-gray-200 pb-4">
+            <h3 className="text-xl font-semibold mb-2">
+              Do I need an account to buy tickets?
+            </h3>
+            <p className="text-gray-700">
+              Yes, you need to **create an account** before purchasing tickets. 
+              This allows you to track your purchases, access event updates, and earn referral points.
+            </p>
+          </div>
+
+          {/* Contacting Support */}
           <div className="border-b border-gray-200 pb-4">
             <h3 className="text-xl font-semibold mb-2">
               How do I contact support?
             </h3>
             <p className="text-gray-700">
-              You can contact support by clicking on the help button in the top
-              right corner or by sending an email to
-              support@eventmanagement.com.
+              You can contact our support team via the **Help Center** or send an email to 
+              <strong> support@eventmanagement.com</strong> for further assistance.
             </p>
           </div>
         </div>

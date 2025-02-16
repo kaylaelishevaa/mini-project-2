@@ -39,6 +39,11 @@ export async function middleware(request: NextRequest) {
   }
 
   const role = verifiedToken.role as string;
+  const emailConfirmed = verifiedToken.emailConfirmed as boolean;
+
+  if (pathname.startsWith("/email-confirmation") && emailConfirmed) {
+    return NextResponse.redirect(new URL("/not-found", request.url));
+  }
 
   if (role) {
     if (pathname.startsWith("/dashboard/customer") && role === "CUSTOMER") {
@@ -57,5 +62,9 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/payment/:path"],
+  matcher: [
+    "/dashboard/:path*",
+    "/payment/:path",
+    "/email-confirmation/:path*",
+  ],
 };
