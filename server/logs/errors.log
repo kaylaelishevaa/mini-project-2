@@ -1,0 +1,428 @@
+2025-02-11T08:27:05.400Z - Missing required fields: eventId, name, discountValue, limit, validUntil
+2025-02-11T08:29:48.169Z - Missing required fields: eventId, name, discountValue, limit, validUntil
+2025-02-11T08:36:58.767Z - Event with ID 123 not found
+2025-02-11T08:37:07.697Z - Missing required fields: eventId
+2025-02-12T01:20:17.800Z - Missing required fields: eventId
+2025-02-12T01:27:44.138Z - Missing required fields: image
+2025-02-12T01:28:00.525Z - Missing required fields: image
+2025-02-12T01:36:41.465Z - Missing required fields: image
+2025-02-12T03:42:27.235Z - Missing required fields: image
+2025-02-12T03:43:13.379Z - Missing required fields: image
+2025-02-12T04:05:43.491Z - Missing required fields: image
+2025-02-12T04:05:53.283Z - Missing required fields: image
+2025-02-12T04:33:16.861Z - Missing required fields: image
+2025-02-12T04:33:21.561Z - Missing required fields: image
+2025-02-12T04:37:58.779Z - Missing required fields: image
+2025-02-12T04:38:00.683Z - Missing required fields: image
+2025-02-12T04:42:07.941Z - Missing required fields: image
+2025-02-12T08:07:29.387Z - Missing required fields: image
+2025-02-13T06:47:07.815Z - Missing required fields: eventId
+2025-02-14T15:05:13.064Z - Unexpected error in GetAllEvents: 
+Invalid `prisma.event.findMany()` invocation in
+/home/farrelihsanp/PURWADHIKA/MINI-PROJECT-MASTER-EDIT/server/src/controllers/event-controller.ts:130:39
+
+  127   next: NextFunction
+  128 ) {
+  129   try {
+→ 130     const events = await prisma.event.findMany(
+The table `public.Event` does not exist in the current database.
+2025-02-14T15:07:50.138Z - Unexpected error in GetAllEvents: 
+Invalid `prisma.event.findMany()` invocation in
+/home/farrelihsanp/PURWADHIKA/MINI-PROJECT-MASTER-EDIT/server/src/controllers/event-controller.ts:130:39
+
+  127   next: NextFunction
+  128 ) {
+  129   try {
+→ 130     const events = await prisma.event.findMany(
+The table `public.Event` does not exist in the current database.
+2025-02-14T18:11:56.376Z - Unexpected error in GetAllEvents: 
+Invalid `prisma.event.findMany()` invocation in
+/home/farrelihsanp/PURWADHIKA/MINI-PROJECT-MASTER-EDIT/server/src/controllers/event-controller.ts:133:39
+
+  130   next: NextFunction
+  131 ) {
+  132   try {
+→ 133     const events = await prisma.event.findMany({
+            include: {
+              CategoryEvent: {
+                include: {
+                  Category: true
+                }
+              },
+              promotions: true,
+              ~~~~~~~~~~
+              Attendee: true,
+          ?   organizer?: true,
+          ?   registrations?: true,
+          ?   EventReview?: true,
+          ?   Transaction?: true,
+          ?   Voucher?: true
+            }
+          })
+
+Unknown field `promotions` for include statement on model `Event`. Available options are marked with ?.
+2025-02-15T02:42:02.218Z - Unexpected error in GetAllEvents: 
+Invalid `prisma.event.findMany()` invocation in
+/home/farrelihsanp/PURWADHIKA/MINI-PROJECT-MASTER-EDIT/server/src/controllers/event-controller.ts:133:39
+
+  130   next: NextFunction
+  131 ) {
+  132   try {
+→ 133     const events = await prisma.event.findMany({
+            include: {
+              CategoryEvent: {
+                include: {
+                  Category: true
+                }
+              },
+              promotions: true,
+              ~~~~~~~~~~
+              Attendee: true,
+          ?   organizer?: true,
+          ?   registrations?: true,
+          ?   EventReview?: true,
+          ?   Transaction?: true,
+          ?   Voucher?: true
+            }
+          })
+
+Unknown field `promotions` for include statement on model `Event`. Available options are marked with ?.
+2025-02-15T04:55:16.422Z - Unexpected error in GetAllEvents: 
+Invalid `prisma.event.findMany()` invocation in
+/home/farrelihsanp/PURWADHIKA/MINI-PROJECT-MASTER-EDIT/server/src/controllers/event-controller.ts:133:39
+
+  130   next: NextFunction
+  131 ) {
+  132   try {
+→ 133     const events = await prisma.event.findMany({
+            include: {
+              CategoryEvent: {
+                include: {
+                  Category: true
+                }
+              },
+              promotions: true,
+              ~~~~~~~~~~
+              Attendee: true,
+          ?   organizer?: true,
+          ?   registrations?: true,
+          ?   EventReview?: true,
+          ?   Transaction?: true,
+          ?   Voucher?: true
+            }
+          })
+
+Unknown field `promotions` for include statement on model `Event`. Available options are marked with ?.
+2025-02-15T04:55:36.884Z - Unexpected error in GetAllEvents: 
+Invalid `prisma.event.findMany()` invocation in
+/home/farrelihsanp/PURWADHIKA/MINI-PROJECT-MASTER-EDIT/server/src/controllers/event-controller.ts:133:39
+
+  130   next: NextFunction
+  131 ) {
+  132   try {
+→ 133     const events = await prisma.event.findMany({
+            include: {
+              CategoryEvent: {
+                include: {
+                  Category: true
+                }
+              },
+              promotions: true,
+              ~~~~~~~~~~
+              Attendee: true,
+          ?   organizer?: true,
+          ?   registrations?: true,
+          ?   EventReview?: true,
+          ?   Transaction?: true,
+          ?   Voucher?: true
+            }
+          })
+
+Unknown field `promotions` for include statement on model `Event`. Available options are marked with ?.
+2025-02-15T05:35:15.323Z - Missing required fields: image
+2025-02-15T05:39:53.725Z - Missing required fields: image
+2025-02-15T05:41:49.958Z - Missing required fields: image
+2025-02-15T05:44:34.571Z - Unexpected error in CreateEvent: 
+Invalid `prisma.event.create()` invocation in
+/home/farrelihsanp/PURWADHIKA/MINI-PROJECT-MASTER-EDIT/server/src/controllers/event-controller.ts:107:26
+
+  104   },
+  105 };
+  106 
+→ 107 await prisma.event.create({
+        data: {
+          name: "name1",
+          excerpt: "excerpt1",
+          description: "description1",
+          date: new Date("2025-03-08T07:54:00.000Z"),
+          location: "Pasar Minggu",
+          image: "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739598276/event/images/g4yjvay8w4g4han9nbr2.png",
+          price: 100000,
+          availableSeats: 100,
+          slug: "name1",
+          organizerId: 124,
+          isFree: "false",
+                  ~~~~~~~
+          CategoryEvent: {
+            createMany: {
+              data: [
+                {
+                  categoryId: 1
+                }
+              ]
+            }
+          }
+        }
+      })
+
+Argument `isFree`: Invalid value provided. Expected Boolean, provided String.
+2025-02-15T05:46:56.818Z - Unexpected error in CreateEvent: 
+Invalid `prisma.event.create()` invocation in
+/home/farrelihsanp/PURWADHIKA/MINI-PROJECT-MASTER-EDIT/server/src/controllers/event-controller.ts:107:26
+
+  104   },
+  105 };
+  106 
+→ 107 await prisma.event.create(
+Foreign key constraint violated: `CategoryEvent_categoryId_fkey (index)`
+2025-02-15T05:55:33.328Z - Missing required fields: categoryIds
+2025-02-15T05:55:43.795Z - Missing required fields: categoryIds
+2025-02-15T05:56:14.023Z - Unexpected error in CreateEvent: categoryIds.map is not a function
+2025-02-15T08:10:14.827Z - Unexpected error in GetAllPromotions: Cannot read properties of undefined (reading 'findMany')
+2025-02-15T08:21:44.825Z - Unexpected error in CreatePromotion: 
+Invalid `prisma.voucher.create()` invocation in
+/home/farrelihsanp/PURWADHIKA/MINI-PROJECT-MASTER-EDIT/server/src/controllers/promotion-controller.ts:62:44
+
+  59   expiredAt: new Date(validUntil),
+  60 };
+  61 
+→ 62 const promotion = await prisma.voucher.create({
+       data: {
+         eventId: 4,
+         name: "Summer Sale",
+         ~~~~
+         discountRate: 20,
+         stock: 100,
+         code: "SUMMER123",
+         expiredAt: new Date("2023-12-31T23:59:59.000Z"),
+     ?   id?: Int
+       }
+     })
+
+Unknown argument `name`. Did you mean `code`? Available options are marked with ?.
+2025-02-15T20:03:05.422Z - Unexpected error in GetSingleEvent: 
+Invalid `prisma.event.findUnique()` invocation in
+/home/farrelihsanp/PURWADHIKA/MINI-PROJECT-MASTER/server/src/controllers/event-controller.ts:184:38
+
+  181   next: NextFunction
+  182 ) {
+  183   try {
+→ 184     const event = await prisma.event.findUnique({
+            where: {
+          +   id: Int
+            },
+            include: {
+              organizer: true,
+              CategoryEvent: {
+                include: {
+                  Category: true
+                }
+              }
+            }
+          })
+
+Argument `id` is missing.
+2025-02-15T20:51:44.704Z - Unexpected error in GetSingleEvent: 
+Invalid `prisma.event.findUnique()` invocation in
+/home/farrelihsanp/PURWADHIKA/MINI-PROJECT-MASTER/server/src/controllers/event-controller.ts:176:38
+
+  173   next: NextFunction
+  174 ) {
+  175   try {
+→ 176     const event = await prisma.event.findUnique({
+            where: {
+          +   id: Int
+            },
+            include: {
+              organizer: true,
+              CategoryEvent: {
+                include: {
+                  Category: true
+                }
+              }
+            }
+          })
+
+Argument `id` is missing.
+2025-02-15T21:17:37.352Z - Event with ID 71 not found
+2025-02-16T01:48:48.807Z - Event with ID 4 not found
+2025-02-16T02:05:37.142Z - Unexpected error in CreateVoucher: 
+Invalid `prisma.voucher.create()` invocation in
+/home/farrelihsanp/PURWADHIKA/MINI-PROJECT-MASTER/server/src/controllers/voucher-controller.ts:61:42
+
+  58   expiredAt: new Date(validUntil),
+  59 };
+  60 
+→ 61 const Voucher = await prisma.voucher.create(
+Unique constraint failed on the fields: (`code`)
+2025-02-16T02:44:00.351Z - Unexpected error in GetSingleEvent: 
+Invalid `prisma.event.findUnique()` invocation in
+/home/farrelihsanp/PURWADHIKA/MINI-PROJECT-MASTER/server/src/controllers/event-controller.ts:176:38
+
+  173   next: NextFunction
+  174 ) {
+  175   try {
+→ 176     const event = await prisma.event.findUnique({
+            where: {
+          +   id: Int
+            },
+            include: {
+              organizer: true,
+              CategoryEvent: {
+                include: {
+                  Category: true
+                }
+              }
+            }
+          })
+
+Argument `id` is missing.
+2025-02-16T02:44:01.794Z - Unexpected error in GetSingleEvent: 
+Invalid `prisma.event.findUnique()` invocation in
+/home/farrelihsanp/PURWADHIKA/MINI-PROJECT-MASTER/server/src/controllers/event-controller.ts:176:38
+
+  173   next: NextFunction
+  174 ) {
+  175   try {
+→ 176     const event = await prisma.event.findUnique({
+            where: {
+          +   id: Int
+            },
+            include: {
+              organizer: true,
+              CategoryEvent: {
+                include: {
+                  Category: true
+                }
+              }
+            }
+          })
+
+Argument `id` is missing.
+2025-02-16T02:44:25.900Z - Unexpected error in GetSingleEvent: 
+Invalid `prisma.event.findUnique()` invocation in
+/home/farrelihsanp/PURWADHIKA/MINI-PROJECT-MASTER/server/src/controllers/event-controller.ts:176:38
+
+  173   next: NextFunction
+  174 ) {
+  175   try {
+→ 176     const event = await prisma.event.findUnique({
+            where: {
+          +   id: Int
+            },
+            include: {
+              organizer: true,
+              CategoryEvent: {
+                include: {
+                  Category: true
+                }
+              }
+            }
+          })
+
+Argument `id` is missing.
+2025-02-16T02:51:18.542Z - Unexpected error in GetSingleEvent: 
+Invalid `prisma.event.findUnique()` invocation in
+/home/farrelihsanp/PURWADHIKA/MINI-PROJECT-MASTER/server/src/controllers/event-controller.ts:176:38
+
+  173   next: NextFunction
+  174 ) {
+  175   try {
+→ 176     const event = await prisma.event.findUnique({
+            where: {
+          +   id: Int
+            },
+            include: {
+              organizer: true,
+              CategoryEvent: {
+                include: {
+                  Category: true
+                }
+              }
+            }
+          })
+
+Argument `id` is missing.
+2025-02-16T02:51:25.575Z - Unexpected error in GetSingleEvent: 
+Invalid `prisma.event.findUnique()` invocation in
+/home/farrelihsanp/PURWADHIKA/MINI-PROJECT-MASTER/server/src/controllers/event-controller.ts:176:38
+
+  173   next: NextFunction
+  174 ) {
+  175   try {
+→ 176     const event = await prisma.event.findUnique({
+            where: {
+          +   id: Int
+            },
+            include: {
+              organizer: true,
+              CategoryEvent: {
+                include: {
+                  Category: true
+                }
+              }
+            }
+          })
+
+Argument `id` is missing.
+2025-02-16T02:52:05.036Z - Unexpected error in GetSingleEvent: 
+Invalid `prisma.event.findUnique()` invocation in
+/home/farrelihsanp/PURWADHIKA/MINI-PROJECT-MASTER/server/src/controllers/event-controller.ts:176:38
+
+  173   next: NextFunction
+  174 ) {
+  175   try {
+→ 176     const event = await prisma.event.findUnique({
+            where: {
+          +   id: Int
+            },
+            include: {
+              organizer: true,
+              CategoryEvent: {
+                include: {
+                  Category: true
+                }
+              }
+            }
+          })
+
+Argument `id` is missing.
+2025-02-16T03:22:45.185Z - Missing required fields: eventId
+2025-02-16T03:30:22.742Z - Missing required fields: eventId
+2025-02-16T03:31:16.642Z - Missing required fields: eventId
+2025-02-16T03:33:58.386Z - Missing required fields: eventId
+2025-02-16T03:34:18.897Z - Missing required fields: eventId
+2025-02-16T03:36:05.567Z - Missing required fields: eventId
+2025-02-16T04:02:46.068Z - Unexpected error in GetSingleEvent: 
+Invalid `prisma.event.findUnique()` invocation in
+/home/farrelihsanp/PURWADHIKA/MINI-PROJECT-MASTER/server/src/controllers/event-controller.ts:176:38
+
+  173   next: NextFunction
+  174 ) {
+  175   try {
+→ 176     const event = await prisma.event.findUnique({
+            where: {
+          +   id: Int
+            },
+            include: {
+              organizer: true,
+              CategoryEvent: {
+                include: {
+                  Category: true
+                }
+              }
+            }
+          })
+
+Argument `id` is missing.
+2025-02-16T06:08:43.524Z - Event with ID 127 not found

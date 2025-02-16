@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa"; // Import the icons
 
 const ListCategory = () => {
   const [categories, setCategories] = useState({ data: [] }); // Initialize state with an object containing a 'data' property
@@ -70,7 +71,7 @@ const ListCategory = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="max-w-7xl mx-auto p-4">
       <h1 className="text-3xl font-bold mb-8">Categories</h1>
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {currentCategories.map((category) => (
@@ -85,8 +86,8 @@ const ListCategory = () => {
               <Image
                 src={category.image} // Ensure the category object has an 'image' property
                 alt={category.name}
-                width={400}
-                height={400}
+                width={1200}
+                height={1200}
                 className="w-20 h-20 rounded-full mb-2"
               />
               <span className="text-xl text-center font-semibold hover:text-blue-500 transition-colors duration-300">
@@ -100,16 +101,16 @@ const ListCategory = () => {
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="px-4 py-2 bg-blue-500 text-white rounded-l-lg disabled:bg-gray-300 hover:bg-blue-600 transition-colors duration-300"
+          className="px-4 py-2 bg-red-900 text-white rounded-l-lg disabled:bg-gray-300 hover:bg-red-900 transition-colors duration-300"
         >
-          Previous
+          <FaChevronLeft /> {/* Left arrow icon */}
         </button>
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="px-4 py-2 bg-blue-500 text-white rounded-r-lg disabled:bg-gray-300 hover:bg-blue-600 transition-colors duration-300"
+          className="px-4 py-2 bg-red-900 text-white rounded-r-lg disabled:bg-gray-300 hover:bg-red-900 transition-colors duration-300"
         >
-          Next
+          <FaChevronRight /> {/* Right arrow icon */}
         </button>
       </div>
     </div>

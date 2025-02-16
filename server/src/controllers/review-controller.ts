@@ -6,7 +6,7 @@ import { Request, Response, NextFunction } from "express";
 const prisma = new PrismaClient();
 
 export const CreateReview = async (req: Request, res: Response) => {
-  const { overallExperience, qualityOfEvent, suggestions } = req.body;
+  const { overallExperience, qualityOfEvent, suggestions, eventId } = req.body;
 
   try {
     const review = await prisma.eventReview.create({
@@ -14,6 +14,7 @@ export const CreateReview = async (req: Request, res: Response) => {
         overallExperience,
         qualityOfEvent,
         suggestions,
+        eventId,
       },
     });
     res.status(201).json({ ok: true, message: "New Review added" });
