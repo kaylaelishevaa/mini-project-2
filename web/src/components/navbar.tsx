@@ -1,89 +1,221 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import LogoutModal from "./Logout";
 
-const Navbar: React.FC = () => {
-  return (
-    <nav className="bg-red-900 rounded-sm shadow-md">
-      <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        {/* Logo */}
-        <div className="flex items-center">
+interface UserInfo {
+  id: number;
+  name: string;
+  role: "CUSTOMERS" | "ORGANIZERS" | null;
+}
+
+export default function Navbar() {
+  const router = useRouter();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  const [user, setUser] = useState<UserInfo | null>(null);
+  const [loadingUser, setLoadingUser] = useState(true);
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  async function fetchUser() {
+    try {
+      const res = await fetch("http://localhost:8000/api/v1/auth/me", {
+        credentials: "include",
+      });
+      if (!res.ok) {
+        // 401 => user null
+        setLoadingUser(false);
+        return;
+      }
+      const data = await res.json();
+      setUser({ id: data.id, name: data.username, role: data.role });
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+    } finally {
+      setLoadingUser(false);
+    }
+  }
+
+  // Dipanggil saat logout sukses
+  function handleLogoutSuccess() {
+    setUser(null);
+    router.refresh();
+  }
+
+  function handleLogoutClick() {
+    setShowLogoutModal(true);
+  }
+  function handleCloseModal() {
+    setShowLogoutModal(false);
+  }
+
+  if (loadingUser) {
+    return (
+      <nav className="bg-red-900 p-4">
+        <div className="container mx-auto flex justify-between">
+          <div className="text-white font-bold">Happenings Hub</div>
+          <p className="text-white">Checking user...</p>
+        </div>
+      </nav>
+    );
+  }
+
+  // =========================
+  //    1) Belum login
+  // =========================
+  if (!user) {
+    return (
+      <nav className="bg-red-900 rounded-sm shadow-md">
+        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <div className="font-bold text-xl text-white">
             <Link href="/" className="text-white">
               Happenings Hub
             </Link>
           </div>
+
+          <div className="hidden md:flex space-x-4">
+            <Link href="/categories" className="text-white hover:text-blue-400">
+              Categories
+            </Link>
+            <Link
+              href="/eventlisting"
+              className="text-white hover:text-blue-400"
+            >
+              Find Events
+            </Link>
+            <Link href="/helpcenter" className="text-white hover:text-blue-400">
+              Help Center
+            </Link>
+            <Link href="/login" className="text-white hover:text-blue-400">
+              Log In
+            </Link>
+            <Link href="/register" className="text-white hover:text-blue-400">
+              Register
+            </Link>
+          </div>
+        </div>
+      </nav>
+    );
+  }
+
+  // =========================
+  //    2) Login + CUSTOMERS
+  // =========================
+  if (user.role === "CUSTOMERS") {
+    return (
+      <nav className="bg-red-900 rounded-sm shadow-md">
+        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+          <div className="font-bold text-xl text-white">
+            <Link href="/dashboard/home-customers/" className="text-white">
+              Happenings Hub
+            </Link>
+          </div>
+
+          <div className="hidden md:flex space-x-4 items-center">
+            <Link
+              href="/dashboard/home-customers/attended-events"
+              className="text-white hover:text-blue-400"
+            >
+              Attended Events
+            </Link>
+            <Link
+              href="/eventlisting"
+              className="text-white hover:text-blue-400"
+            >
+              Find Events
+            </Link>
+            <Link href="/helpcenter" className="text-white hover:text-blue-400">
+              Help Center
+            </Link>
+            <Link
+              href="/dashboard/home-customers/top-up"
+              className="text-white hover:text-blue-400"
+            >
+              Top Up
+            </Link>
+
+            <p className="text-white">Hi, {user.name}!</p>
+
+            <Link href="/dashboard/home-customers">
+              <div className="w-8 h-8 bg-gray-300 rounded-full cursor-pointer" />
+            </Link>
+
+            {/* Logout button */}
+            <button
+              onClick={handleLogoutClick}
+              className="bg-white text-red-900 px-3 py-1 rounded hover:bg-gray-100"
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
-        {/* Search Bar */}
-        {/* <div className="relative">
-          <input
-            type="text"
-            placeholder="Search events"
-            className="w-full py-2 px-4 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        {showLogoutModal && (
+          <LogoutModal
+            onClose={handleCloseModal}
+            onLogoutSuccess={handleLogoutSuccess}
           />
-          <svg
-            className="absolute right-0 top-0 mt-3 mr-4 text-gray-400 h-4 w-4"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
-        </div> */}
+        )}
+      </nav>
+    );
+  }
 
-        {/* Location */}
-        {/* <div className="flex items-center">
-          <svg
-            className="h-5 w-5 text-white"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-            />
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-          </svg>
-          <span className="ml-2 text-white">Jakarta</span>
-        </div> */}
+  // =========================
+  //    3) Login + ORGANIZERS
+  // =========================
+  if (user.role === "ORGANIZERS") {
+    return (
+      <nav className="bg-red-900 rounded-sm shadow-md">
+        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+          <div className="font-bold text-xl text-white">
+            <Link href="/dashboard/home-organizers" className="text-white">
+              Happenings Hub
+            </Link>
+          </div>
 
-        <div className="hidden md:flex space-x-4">
-          <Link href="/eventlisting" className="text-white hover:text-blue-500">
-            Find Events
-          </Link>{" "}
-          <Link href="/categories" className="text-white hover:text-blue-500">
-            Categories
-          </Link>
-          <Link href="/helpcenter" className="text-white hover:text-blue-500">
-            Help Center
-          </Link>
-          <Link href="/login" className="text-white hover:text-blue-500">
-            Log In
-          </Link>
-          <Link href="/signup" className="text-white hover:text-blue-500">
-            Sign Up
-          </Link>
+          <div className="hidden md:flex space-x-4 items-center">
+            {/* Create Event (only for organizers) */}
+            <Link
+              href="/dashboard/home-organizers/create-event"
+              className="text-white hover:text-blue-400"
+            >
+              Create Events
+            </Link>
+
+            <Link
+              href="/dashboard/home-organizers/created-event"
+              className="text-white hover:text-blue-400"
+            >
+              Created Event & Promotions
+            </Link>
+            <p className="text-white mr-4">Hi, {user.name}!</p>
+            {/* Profile Icon => Dashboard for organizers */}
+            <Link href="/dashboard/organizer">
+              <div className="w-8 h-8 bg-gray-300 rounded-full cursor-pointer" />
+            </Link>
+
+            {/* Logout button */}
+            <button
+              onClick={handleLogoutClick}
+              className="bg-white text-red-900 px-3 py-1 rounded hover:bg-gray-100"
+            >
+              Logout
+            </button>
+          </div>
         </div>
-      </div>
-    </nav>
-  );
-};
 
-export default Navbar;
+        {showLogoutModal && (
+          <LogoutModal
+            onClose={handleCloseModal}
+            onLogoutSuccess={handleLogoutSuccess}
+          />
+        )}
+      </nav>
+    );
+  }
+}

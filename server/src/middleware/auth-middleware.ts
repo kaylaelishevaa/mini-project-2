@@ -9,18 +9,22 @@ export async function verifyToken(
 ) {
   try {
     const token = req.cookies.token;
+    console.log(token);
 
     if (!token) {
-      res.status(401).json({ message: "No token provided!!!!" });
+      res.status(401).json({ message: "No token provided" });
       return;
-    } else {
-      console.log("Token found:", token);
     }
 
     const verifiedUser = jwt.verify(
       token,
       process.env.JWT_SECRET_KEY as string
     ) as CustomJWTPayload;
+
+    if (!verifiedUser) {
+      res.status(401).json({ message: "Invalid token" });
+      return;
+    }
 
     req.user = verifiedUser;
 
@@ -33,7 +37,6 @@ export async function verifyToken(
 export function roleGuard(role: string) {
   return async function (req: Request, res: Response, next: NextFunction) {
     try {
-      console.log(role);
       if (req.user?.role !== role) {
         res.status(401).json({ message: "Unauthorized access. Forbidden!" });
         return;
@@ -45,5 +48,3 @@ export function roleGuard(role: string) {
     }
   };
 }
-
-

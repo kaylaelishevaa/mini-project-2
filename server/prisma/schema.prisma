@@ -16,6 +16,7 @@ datasource db {
 enum Role {
   CUSTOMERS
   ORGANIZERS
+  UNSET
 }
 
 model User {
@@ -31,16 +32,14 @@ model User {
   updatedAt      DateTime @updatedAt
   walletBalance  Int      @default(0)
 
-
-  Referral Referral[]
-  Point    Point[]
-  Coupon   Coupon[]
-
+  Referral     Referral[]
+  Point        Point[]
+  Coupon       Coupon[]
   confirmToken confirmToken[]
-
-  Event Event[]
-
+  Event        Event[]
   Registration Registration[]
+  Transaction  Transaction[]
+  Wallet       Wallet?
 }
 
 model Referral {
@@ -54,8 +53,8 @@ model Referral {
 
 model Point {
   id           Int      @id @default(autoincrement())
-  userId       Int
-  pointsEarned Int      @default(10000)
+  userId       Int      @unique
+  pointsEarned Int      @default(0)
   expiresAt    DateTime
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -63,8 +62,10 @@ model Point {
 
 model Coupon {
   id        Int      @id @default(autoincrement())
-  userId    Int
+  code      String   @unique
   discount  Int      @default(10)
+  used      Boolean  @default(false)
+  userId    Int
   expiresAt DateTime
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -82,27 +83,29 @@ model confirmToken {
 }
 
 model Event {
-  id             Int         @id @default(autoincrement())
+  id             Int      @id @default(autoincrement())
   name           String
   excerpt        String
   description    String
   date           DateTime
-  price          Int         @default(0)
+  price          Decimal
   image          String
   location       String
   availableSeats Int
   organizerId    Int
   isFree         Boolean
   slug           String
-  promotions     Promotion[]
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
 
-  organizer     User            @relation(fields: [organizerId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organizer     User            @relation(fields: [organizerId], references: [id], onDelete: Cascade)
   registrations Registration[]
-  transactions  Transaction[]
   CategoryEvent CategoryEvent[]
   Attendee      Attendee[]
+  EventReview   EventReview[]
+  Transaction   Transaction[]
+  Voucher       Voucher[]
 }
 
 model Category {
@@ -126,16 +129,15 @@ model CategoryEvent {
   Category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
-model Promotion {
-  id            Int      @id @default(autoincrement())
-  eventId       Int
-  name          String
-  discountValue Int      @default(10)
-  limit         Int
-  referralCode  String?
-  validUntil    DateTime
+model Voucher {
+  id           Int      @id @default(autoincrement())
+  code         String   @unique
+  discountRate Int
+  stock        Int
+  eventId      Int
+  expiredAt    DateTime
 
-  event Event @relation(fields: [eventId], references: [id])
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Attendee {
@@ -146,18 +148,20 @@ model Attendee {
   hasPaid      Boolean @default(false)
   referralCode String?
 
-  event Event @relation(fields: [eventId], references: [id])
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model EventReview {
   id                Int      @id @default(autoincrement())
+  eventId           Int
   overallExperience Int      @default(0)
   qualityOfEvent    Int      @default(0)
   suggestions       String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
-}
 
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
 
 model Registration {
   id        Int      @id @default(autoincrement())
@@ -165,9 +169,8 @@ model Registration {
   userId    Int
   createdAt DateTime @default(now())
 
-  event Event @relation(fields: [eventId], references: [id])
-  user  User  @relation(fields: [userId], references: [id])
-
+  event       Event         @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   Transaction Transaction[]
 }
 
@@ -175,12 +178,32 @@ model Transaction {
   id             Int      @id @default(autoincrement())
   amount         Decimal  @default(0.0)
   createdAt      DateTime @default(now())
+  userId         Int
   eventId        Int
   registrationId Int
 
-  // Example relation: A transaction might be tied to an event or a registration
+  User         User          @relation(fields: [userId], references: [id])
   event        Event         @relation(fields: [eventId], references: [id])
+  Receipt      Receipt[]
   registration Registration? @relation(fields: [registrationId], references: [id])
+}
+
+model Receipt {
+  id            Int      @id @default(autoincrement())
+  receiptCode   String
+  receiptTotal  Decimal
+  transactionId Int
+  createdAt     DateTime @default(now())
+
+  Transaction Transaction @relation(fields: [transactionId], references: [id])
+}
+
+model Wallet {
+  id      Int     @id @default(autoincrement())
+  balance Decimal @default(0)
+  userId  Int     @unique
+
+  User User @relation(fields: [userId], references: [id])
 }
 
 //User - Referral = one to many

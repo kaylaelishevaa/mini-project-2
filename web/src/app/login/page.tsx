@@ -33,12 +33,33 @@ export default function LoginPage() {
         body: JSON.stringify(formData),
       });
       const data = await response.json();
+
       if (!response.ok) {
         throw new Error(data.message || "Login failed");
       }
 
       toast.success("Login successful!");
-      router.push("/select-role");
+      const meRes = await fetch("http://localhost:8000/api/v1/auth/me", {
+        credentials: "include",
+      });
+      const meData = await meRes.json();
+      if (!meRes.ok) {
+        // fallback => if somehow error
+        router.push("/select-role");
+        return;
+      }
+
+      // cek meData.role => "CUSTOMERS" / "ORGANIZERS" / dsb
+      if (meData.role === "CUSTOMERS") {
+        // langsung ke /home-customers
+        router.push("/dashboard/home-customers");
+      } else if (meData.role === "ORGANIZERS") {
+        // langsung ke /home-organizers
+        router.push("/dashboard/home-organizers");
+      } else {
+        // kalau role default atau null => user must select role
+        router.push("/select-role");
+      }
     } catch (error) {
       if (error instanceof ZodError) {
         const errors: Record<string, string> = {};

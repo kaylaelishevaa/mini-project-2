@@ -23,7 +23,7 @@ export const registerSchema = z.object({
       /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
       "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character"
     ),
-  role: z.enum(["CUSTOMERS", "ORGANIZERS", "USER"]),
+  role: z.enum(["CUSTOMERS", "ORGANIZERS", "UNSET"]),
   referralCode: z.string().optional()
 });
 
