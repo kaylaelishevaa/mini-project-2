@@ -122,6 +122,7 @@ export async function payTicket(req: Request, res: Response, next: NextFunction)
           needed: ticketPrice,
           walletBalance: user.walletBalance,
         });
+        return;
 
       }
       console.log("HELLO" + user?.walletBalance)
