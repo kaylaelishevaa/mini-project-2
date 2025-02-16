@@ -426,3 +426,30 @@ Invalid `prisma.event.findUnique()` invocation in
 
 Argument `id` is missing.
 2025-02-16T06:08:43.524Z - Event with ID 127 not found
+2025-02-16T18:01:46.428Z - Unexpected error in CreateEvent: 
+Invalid `prisma.event.create()` invocation in
+/Users/kaylaelishevaa/mini-project/server/src/controllers/event-controller.ts:97:26
+
+  94   },
+  95 };
+  96 
+→ 97 await prisma.event.create(
+Foreign key constraint violated: `Event_organizerId_fkey (index)`
+2025-02-16T18:01:49.411Z - Unexpected error in CreateEvent: 
+Invalid `prisma.event.create()` invocation in
+/Users/kaylaelishevaa/mini-project/server/src/controllers/event-controller.ts:97:26
+
+  94   },
+  95 };
+  96 
+→ 97 await prisma.event.create(
+Foreign key constraint violated: `Event_organizerId_fkey (index)`
+2025-02-16T18:02:20.751Z - Unexpected error in CreateEvent: 
+Invalid `prisma.event.create()` invocation in
+/Users/kaylaelishevaa/mini-project/server/src/controllers/event-controller.ts:97:26
+
+  94   },
+  95 };
+  96 
+→ 97 await prisma.event.create(
+Foreign key constraint violated: `Event_organizerId_fkey (index)`
