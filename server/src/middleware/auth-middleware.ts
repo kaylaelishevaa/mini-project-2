@@ -11,7 +11,7 @@ export async function verifyToken(
     const token = req.cookies.token;
 
     if (!token) {
-      res.status(401).json({ message: "No token provided!!!!" });
+      res.status(401).json({ message: "Please login first!" });
       return;
     }
 

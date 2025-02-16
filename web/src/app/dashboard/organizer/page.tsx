@@ -62,7 +62,7 @@ export default function DashboardPage() {
       setDashboardData(data);
     } catch (err: unknown) {
       if (err instanceof Error) {
-        setError(err.message || "An error occurred while fetching dashboard.");
+        setError(err.message);
       }
     } finally {
       setLoading(false);

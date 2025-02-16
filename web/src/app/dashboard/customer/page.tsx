@@ -1,12 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import ErrorDisplay from "@/components/ErrorDisplay";
 
 export default function CustomersPage() {
   const [walletBalance, setWalletBalance] = useState<number>(0);
   const [points, setPoints] = useState<number>(0);
   const [referralNumber, setReferralNumber] = useState<string>("");
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     fetchUserInfo();
@@ -17,14 +19,17 @@ export default function CustomersPage() {
       const res = await fetch("http://localhost:8000/api/v1/auth/me", {
         credentials: "include",
       });
-      if (!res.ok) throw new Error("Failed to fetch user info");
+      if (!res.ok) throw new Error("Failed to fetch user info. Please login first!");
       const data = await res.json();
       setWalletBalance(data.wallet || 0);
       setPoints(data.points || 0);
       setReferralNumber(data.referralNumber || "");
+      setError("");
     } catch (error) {
-      console.error(error);
-    }
+      if (error instanceof Error) {
+        setError(error.message);
+      }
+       }
   }
 
   function copyReferral() {
@@ -32,6 +37,10 @@ export default function CustomersPage() {
     navigator.clipboard.writeText(referralNumber);
     setMessage("Referral code copied!");
     setTimeout(() => setMessage(""), 2000);
+  }
+
+  if (error) {
+    return <ErrorDisplay statusCode={500} message={error} />;
   }
 
   return (

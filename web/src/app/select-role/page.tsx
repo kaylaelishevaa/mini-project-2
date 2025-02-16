@@ -4,9 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import router from "next/router";
-
-
+// import router from "next/router";
 
 export default function SelectRolePage() {
   const router = useRouter();
@@ -62,7 +60,7 @@ export default function SelectRolePage() {
       <ToastContainer position="top-center" autoClose={3000} />
 
       <h1 className="text-4xl font-bold text-purple-700 mb-2">
-        Welcome to My Event Platform!
+        Welcome to Happenings Hub!
       </h1>
       <p className="text-lg text-gray-600 mb-10">
         We’re glad you’re here! What can we help you with first?
@@ -72,7 +70,7 @@ export default function SelectRolePage() {
         {/* Card 1: Find an Experience (Customer) */}
         <div className="bg-white rounded-lg shadow-md flex flex-col items-center p-6">
           <Image
-            src="/find-experience.png"
+            src="/find-experience.svg"
             alt="Find Experience"
             width={200}
             height={200}
@@ -84,7 +82,7 @@ export default function SelectRolePage() {
           <button
             onClick={() => handleRoleSelection("CUSTOMERS")}
             disabled={loading}
-            className="bg-gray-100 border border-gray-300 rounded px-4 py-2 hover:bg-gray-200"
+            className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
           >
             Tell us what you love
           </button>
@@ -93,7 +91,7 @@ export default function SelectRolePage() {
         {/* Card 2: Organize an Event (Organizer) */}
         <div className="bg-white rounded-lg shadow-md flex flex-col items-center p-6">
           <Image
-            src="/organize-event.png"
+            src="/organize-event.svg"
             alt="Organize Event"
             width={200}
             height={200}

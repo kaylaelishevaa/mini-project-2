@@ -82,8 +82,8 @@ export async function register(
           data: {
             userId: newUser.id,
             discount: 10,
-            // expiresAt: new Date(new Date().setMonth(new Date().getMonth() + 3)),
-            expiresAt: new Date(Date.now() + 3 * 60 * 1000),          },
+            expiresAt: new Date(new Date().setMonth(new Date().getMonth() + 3))},
+            // expiresAt: new Date(Date.now() + 3 * 60 * 1000),          },
         });
       } else {
         res.status(400).json({ message: "Referral code is invalid." });
@@ -111,7 +111,7 @@ export async function register(
       confirmationLink: confirmationLink,
     });
     const { error } = await resend.emails.send({
-      from: "Event Management Platform <onboarding@resend.dev>",
+      from: "Happenings Hub <onboarding@resend.dev>",
       to: email,
       subject: "Confirmation Email",
       html: htmlTemplate,

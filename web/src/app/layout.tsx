@@ -1,7 +1,6 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
+import { Lexend } from "next/font/google";
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import { ReactNode } from "react";
@@ -49,18 +48,25 @@ import { ReactNode } from "react";
 // //   description: 'Next.js + Express + Prisma + Tailwind (Responsive)',
 // // }
 
+const lexend = Lexend({ subsets: ["latin"], weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"] });
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={lexend.className}>
       <body className="bg-gray-50 text-gray-800 min-h-screen">
-      <div>
-      <Navbar />
-    </div>
-        <main className="max-w-2xl mx-auto mt-10 px-4 w-full">{children}</main>
+        {/* Navbar */}
         <div>
-      <Footer />
-    </div>
+          <Navbar />
+        </div>
+
+        {/* Main Content */}
+        <main className="max-w-2xl mx-auto mt-10 px-4 w-full">{children}</main>
+
+        {/* Footer */}
+        <div>
+          <Footer />
+        </div>
       </body>
     </html>
-  )
+  );
 }

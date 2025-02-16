@@ -1,6 +1,6 @@
 import HeroSection from "../components/homepage/herosection";
-import Navbar from "../components/navbar";
-import Footer from "../components/footer";
+// import Navbar from "../components/navbar";
+// import Footer from "../components/footer";
 
 export default async function HomePage() {
   return (

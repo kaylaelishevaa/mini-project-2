@@ -5,23 +5,25 @@ const prisma = new PrismaClient();
 
 export async function payTicket(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("HIT");
     const userId = req.user?.id;
     if (!userId) {
-      return res.status(401).json({ message: "Unauthorized" });
+      res.status(401).json({ message: "Unauthorized" });
+      return
     }
 
     const { eventId, redeem, useCoupon, ticketQty = 1 } = req.body;
     const quantity = Number(ticketQty) > 0 ? Number(ticketQty) : 1;
 
     if (!eventId || typeof eventId !== "number") {
-      return res.status(400).json({ message: "eventId is required (number)" });
+      res.status(400).json({ message: "eventId is required (number)" });
+      return
     }
 
     // 1) Ambil event => dapat base price
     const event = await prisma.event.findUnique({ where: { id: eventId } });
     if (!event) {
-      return res.status(404).json({ message: "Event not found" });
+      res.status(404).json({ message: "Event not found" });
+      return
     }
 
     // === CHECK: APABILA EVENT GRATIS ===
@@ -35,7 +37,7 @@ export async function payTicket(req: Request, res: Response, next: NextFunction)
       });
 
       // Tanggapi ke client bahwa event gratis => no transaction needed
-      return res.status(201).json({
+      res.status(201).json({
         message: "Registration successful (FREE EVENT). No transaction created.",
         registration,
       });
@@ -49,7 +51,8 @@ export async function payTicket(req: Request, res: Response, next: NextFunction)
     // 2) Cek user => wallet
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      res.status(404).json({ message: "User not found" });
+      return
     }
 
     // 3) Gunakan coupon (jika useCoupon = true)
@@ -114,7 +117,7 @@ export async function payTicket(req: Request, res: Response, next: NextFunction)
 
     if (ticketPrice > 0) {
       if (user.walletBalance < ticketPrice) {
-        return res.status(400).json({
+        res.status(400).json({
           message: "Insufficient wallet balance",
           needed: ticketPrice,
           walletBalance: user.walletBalance,
@@ -183,12 +186,14 @@ export async function topUpWallet(req: Request, res: Response, next: NextFunctio
   try {
     const userId = req.user?.id;
     if (!userId) {
-      return res.status(401).json({ message: "Unauthorized" });
+      res.status(401).json({ message: "Unauthorized" });
+      return
     }
 
     const { amount } = req.body;
     if (!amount || typeof amount !== "number" || amount <= 0) {
-      return res.status(400).json({ message: "Invalid top-up amount" });
+      res.status(400).json({ message: "Invalid top-up amount" });
+      return
     }
 
     const updatedUser = await prisma.user.update({

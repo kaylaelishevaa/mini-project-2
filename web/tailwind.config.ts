@@ -14,7 +14,7 @@ export default {
         
       },
       fontFamily: {
-        lexend: ["Lexend", "sans-serif"],
+        sans: ["Lexend", "sans-serif"],
       },
     },
   },
