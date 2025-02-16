@@ -138,12 +138,6 @@ export default function Navbar() {
             >
               Top Up
             </Link>
-            <Link
-              href="/dashboard/home-customers/eventreview"
-              className="text-white hover:text-blue-400"
-            >
-              Event Review
-            </Link>
 
             <p className="text-white">Hi, {user.name}!</p>
 

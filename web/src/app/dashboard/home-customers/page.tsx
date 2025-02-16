@@ -9,21 +9,29 @@ const useUserInfo = () => {
   const [points, setPoints] = useState<number>(0);
   const [referralNumber, setReferralNumber] = useState<string>("");
   const [message, setMessage] = useState<string>("");
-  const [customerName, setCustomerName] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
 
   const fetchUserInfo = useCallback(async () => {
     try {
       const res = await fetch("http://localhost:8000/api/v1/auth/me", {
         credentials: "include",
       });
-      if (!res.ok) throw new Error("Failed to fetch user info");
+      if (!res.ok) {
+        throw new Error(`Failed to fetch user info: ${res.statusText}`);
+      }
       const data = await res.json();
-      setWalletBalance(data.wallet || 0);
-      setPoints(data.points || 0);
-      setReferralNumber(data.referralNumber || "");
-      setCustomerName(data.name || "");
+
+      // Pastikan struktur data sesuai dengan yang diharapkan
+      if (data && typeof data === "object") {
+        setWalletBalance(data.wallet || 0);
+        setPoints(data.points || 0);
+        setReferralNumber(data.referralNumber || "");
+        setUsername(data.name || ""); // Pastikan 'name' ada di respons
+      } else {
+        console.error("Unexpected data structure:", data);
+      }
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching user info:", error);
     }
   }, []);
 
@@ -43,7 +51,7 @@ const useUserInfo = () => {
     points,
     referralNumber,
     message,
-    customerName,
+    username,
     copyReferral,
   };
 };
@@ -54,7 +62,7 @@ const CustomersPage = () => {
     points,
     referralNumber,
     message,
-    customerName,
+    username,
     copyReferral,
   } = useUserInfo();
 
@@ -96,9 +104,7 @@ const CustomersPage = () => {
         <div className="flex items-center mb-6">
           <div>
             <h1 className="text-2xl font-bold mb-2">
-              {customerName
-                ? `Welcome, ${customerName}!`
-                : "My Account (Customers)"}
+              {username ? `Welcome, ${username}!` : "My Account (Customers)"}
             </h1>
             <p className="text-gray-500 text-sm">Customer Profile</p>
           </div>

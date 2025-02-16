@@ -24,8 +24,6 @@ export default function AttendedEventsPage() {
     getEvents();
   }, []);
 
-  console.log(events);
-
   return (
     <section className="container mx-auto px-4 py-8 ">
       <div className="bg-red-900 p-10 text-white">

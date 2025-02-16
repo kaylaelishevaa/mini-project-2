@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 
 export default function ReviewPage({ params }) {
   const [overallExperience, setOverallExperience] = useState(0);
@@ -65,11 +66,39 @@ export default function ReviewPage({ params }) {
 
   return (
     <section>
-      <div className="container mx-auto py-40 pt-32 px-40">
-        <h1 className="text-2xl font-semibold text-center mb-6">
-          Event Reviews and Ratings
-        </h1>
+      <section className="relative flex flex-col items-center justify-center h-56 bg-cover bg-center">
+        <div className="absolute inset-0 h-56">
+          <Image
+            src="https://plus.unsplash.com/premium_photo-1661270434439-2cabce958cd0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="Landing Page Photo"
+            fill
+            className="object-cover"
+          />
+        </div>
+        <div className="absolute inset-0 bg-black opacity-50"></div>
+        <div className="container relative z-10 flex flex-col items-center mx-auto space-y-8 text-white text-center lg:flex-row lg:space-y-0 lg:space-x-12 justify-center">
+          <div className="w-full lg:w-1/2 flex flex-col items-center justify-center text-center">
+            <h1 className="text-5xl sm:text-6xl md:text-6xl lg:text-6xl xl:text-6xl font-bold tracking-wide leading-tight">
+              THANK YOU!
+            </h1>
 
+            <div className="mt-6 space-y-4">
+              <p className="text-base sm:text-lg md:text-xl">
+                I stand before you today filled with gratitude and appreciation.
+                It is with a humble heart that I express my sincere thanks to
+                each and every one of you who has played a part in this journey.
+              </p>
+            </div>
+            <div className="flex flex-col gap-4 mt-6 sm:flex-row justify-center"></div>
+          </div>
+        </div>
+      </section>
+      <div className="container mx-auto py-10 px-40">
+        <div>
+          <h1 className="text-4xl font-semibold text-center mb-6">
+            Event Reviews and Ratings
+          </h1>
+        </div>
         <form onSubmit={handleSubmit} className="mb-8">
           <div className="mb-4">
             <label htmlFor="overallExperience" className="block text-lg mb-2">
@@ -129,7 +158,7 @@ export default function ReviewPage({ params }) {
 
           <button
             type="submit"
-            className="w-full bg-[#FFE047] py-2 rounded-lg hover:scale-105 transition duration-200"
+            className="w-full text-white bg-red-900 py-2 rounded-lg hover:scale-105 transition duration-200"
           >
             Submit Review
           </button>

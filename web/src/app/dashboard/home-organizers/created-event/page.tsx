@@ -46,8 +46,6 @@ export default function AttendedEventsPage() {
     return <div>Error: {error.message}</div>;
   }
 
-  console.log(events);
-
   return (
     <section className="container mx-auto px-4 py-8">
       <div>
