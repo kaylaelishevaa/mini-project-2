@@ -11,20 +11,19 @@ import logRouter from "./routes/log-router";
 import confirmEmailRouter from "./routes/confirm-email-router";
 import pointsRouter from "./routes/points-router";
 import cookieParser from "cookie-parser";
-import organizerRouter from "./routes/dashboard-router";
+import getOrganizerDashboard from "./routes/dashboard-router";
 import walletRouter from "./routes/wallet-router";
 import eventRouter from "./routes/event-router";
 import categoryRouter from "./routes/category-router";
 import reviewRouter from "./routes/review-router";
 import promotionsRouter from "./routes/promotions-router";
-import "dotenv/config";
+import transactionRouter from "./routes/transactions-router";
 
 const app = express();
 const PORT = 8000;
 const prisma = new PrismaClient();
 
 app.use(express.json());
-
 app.use(cookieParser());
 
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
@@ -38,11 +37,12 @@ app.use("/api/v1/auth", logRouter);
 app.use("/api/v1/confirm", confirmEmailRouter);
 app.use("/api/v1", pointsRouter);
 app.use("/api/v1/wallet", walletRouter);
-app.use("/api/v1/dashboard", getOrganizerDashboard); // or choose one of the dashboard routes
-app.use("/api/v1/events", eventRouter);
+app.use("/api/v1/dashboard", getOrganizerDashboard);
 app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/review", reviewRouter);
 app.use("/api/v1/promotions", promotionsRouter);
+app.use("/api/v1/transactions", transactionRouter);
+app.use("/api/v1/events", eventRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

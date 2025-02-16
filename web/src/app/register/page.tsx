@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { ZodError } from "zod";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import { registerSchema } from "../schemas/auth-schemas";
 
 export default function RegisterPage() {
@@ -17,9 +16,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("UNSET");
   const [referralCode, setReferralCode] = useState("");
-
   const [loading, setLoading] = useState(false);
-
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const handleRegister = async (e: React.FormEvent) => {

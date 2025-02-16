@@ -33,7 +33,7 @@ export default function Navbar() {
         return;
       }
       const data = await res.json();
-      setUser({ id: data.id, name: data.name, role: data.role });
+      setUser({ id: data.id, name: data.username, role: data.role });
     } catch (error) {
       console.error("Error fetching user info:", error);
     } finally {
@@ -79,14 +79,14 @@ export default function Navbar() {
           </div>
 
           <div className="hidden md:flex space-x-4">
+            <Link href="/categories" className="text-white hover:text-blue-400">
+              Categories
+            </Link>
             <Link
               href="/eventlisting"
               className="text-white hover:text-blue-400"
             >
               Find Events
-            </Link>
-            <Link href="/categories" className="text-white hover:text-blue-400">
-              Categories
             </Link>
             <Link href="/helpcenter" className="text-white hover:text-blue-400">
               Help Center
@@ -111,27 +111,43 @@ export default function Navbar() {
       <nav className="bg-red-900 rounded-sm shadow-md">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <div className="font-bold text-xl text-white">
-            <Link href="/" className="text-white">
+            <Link href="/dashboard/home-customers/" className="text-white">
               Happenings Hub
             </Link>
           </div>
 
           <div className="hidden md:flex space-x-4 items-center">
             <Link
+              href="/dashboard/home-customers/attended-events"
+              className="text-white hover:text-blue-400"
+            >
+              Attended Events
+            </Link>
+            <Link
               href="/eventlisting"
               className="text-white hover:text-blue-400"
             >
               Find Events
             </Link>
-            <Link href="/categories" className="text-white hover:text-blue-400">
-              Categories
-            </Link>
             <Link href="/helpcenter" className="text-white hover:text-blue-400">
               Help Center
             </Link>
+            <Link
+              href="/dashboard/home-customers/top-up"
+              className="text-white hover:text-blue-400"
+            >
+              Top Up
+            </Link>
+            <Link
+              href="/dashboard/home-customers/eventreview"
+              className="text-white hover:text-blue-400"
+            >
+              Event Review
+            </Link>
 
-            {/* Profile Icon => Dashboard for customers */}
-            <Link href="/dashboard/customer">
+            <p className="text-white">Hi, {user.name}!</p>
+
+            <Link href="/dashboard/home-customers">
               <div className="w-8 h-8 bg-gray-300 rounded-full cursor-pointer" />
             </Link>
 
@@ -163,7 +179,7 @@ export default function Navbar() {
       <nav className="bg-red-900 rounded-sm shadow-md">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <div className="font-bold text-xl text-white">
-            <Link href="/" className="text-white">
+            <Link href="/dashboard/home-organizers" className="text-white">
               Happenings Hub
             </Link>
           </div>
@@ -171,12 +187,19 @@ export default function Navbar() {
           <div className="hidden md:flex space-x-4 items-center">
             {/* Create Event (only for organizers) */}
             <Link
-              href="/event/create"
+              href="/dashboard/home-organizers/create-event"
               className="text-white hover:text-blue-400"
             >
               Create Events
             </Link>
 
+            <Link
+              href="/dashboard/home-organizers/created-event"
+              className="text-white hover:text-blue-400"
+            >
+              Created Event & Promotions
+            </Link>
+            <p className="text-white mr-4">Hi, {user.name}!</p>
             {/* Profile Icon => Dashboard for organizers */}
             <Link href="/dashboard/organizer">
               <div className="w-8 h-8 bg-gray-300 rounded-full cursor-pointer" />

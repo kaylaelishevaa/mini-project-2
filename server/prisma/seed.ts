@@ -1,1012 +1,993 @@
-import { PrismaClient, Role } from "@prisma/client";
-import { genSalt, hash } from "bcryptjs";
-
+const { PrismaClient } = require("@prisma/client");
+const express = require("express");
+const app = express();
 const prisma = new PrismaClient();
+import { hash } from "bcryptjs";
 
 async function main() {
-  const customer1 = await prisma.user.create({
-    data: {
-      name: "John Doe",
-      username: "johndoe",
-      password: "hashed_password_1",
-      email: "john.doe@example.com",
-      role: "CUSTOMERS",
-      referralNumber: "REF12345",
-      walletBalance: 500,
-    },
+  await prisma.referral.deleteMany({});
+  await prisma.point.deleteMany({});
+  await prisma.coupon.deleteMany({});
+  await prisma.confirmToken.deleteMany({});
+  await prisma.receipt.deleteMany({});
+  await prisma.transaction.deleteMany({});
+  await prisma.registration.deleteMany({});
+  await prisma.attendee.deleteMany({});
+  await prisma.eventReview.deleteMany({});
+  await prisma.voucher.deleteMany({});
+  await prisma.categoryEvent.deleteMany({});
+  await prisma.event.deleteMany({});
+  await prisma.category.deleteMany({});
+  await prisma.wallet.deleteMany({});
+  await prisma.user.deleteMany({});
+
+  /* -------------------------------------------------------------------------- */
+  /*                                 CREATE USER                                */
+  /* -------------------------------------------------------------------------- */
+
+  const users = await prisma.user.createMany({
+    data: [
+      {
+        name: "Diana Prince",
+        username: "dianap",
+        password: await hash("securepass1", 10),
+        email: "diana@example.com",
+        role: "ORGANIZERS",
+        referralNumber: "REF101",
+        walletBalance: 500000,
+        emailConfirmed: true,
+      },
+      {
+        name: "Edward Norton",
+        username: "edwardn",
+        password: await hash("securepass2", 10),
+        email: "edward@example.com",
+        role: "CUSTOMERS",
+        referralNumber: "REF102",
+        walletBalance: 120,
+        emailConfirmed: true,
+      },
+      {
+        name: "Fiona Apple",
+        username: "fionaapple",
+        password: await hash("securepass3", 10),
+        email: "fiona@example.com",
+        role: "ORGANIZERS",
+        referralNumber: "REF103",
+        walletBalance: 500000,
+        emailConfirmed: true,
+      },
+      {
+        name: "George Clooney",
+        username: "georgec",
+        password: await hash("securepass4", 10),
+        email: "george@example.com",
+        role: "CUSTOMERS",
+        referralNumber: "REF104",
+        walletBalance: 500000,
+        emailConfirmed: true,
+      },
+      {
+        name: "Hannah Montana",
+        username: "hannahm",
+        password: await hash("securepass5", 10),
+        email: "hannah@example.com",
+        role: "ORGANIZERS",
+        referralNumber: "REF105",
+        walletBalance: 500000,
+        emailConfirmed: true,
+      },
+      {
+        name: "Ian McKellen",
+        username: "ianm",
+        password: await hash("securepass6", 10),
+        email: "ian@example.com",
+        role: "CUSTOMERS",
+        referralNumber: "REF106",
+        walletBalance: 500000,
+        emailConfirmed: true,
+      },
+      {
+        name: "Jasmine Lee",
+        username: "jasminelee",
+        password: await hash("securepass7", 10),
+        email: "jasmine@example.com",
+        role: "ORGANIZERS",
+        referralNumber: "REF107",
+        walletBalance: 500000,
+        emailConfirmed: true,
+      },
+      {
+        name: "Kevin Hart",
+        username: "kevinhart",
+        password: await hash("securepass8", 10),
+        email: "kevin@example.com",
+        role: "CUSTOMERS",
+        referralNumber: "REF108",
+        walletBalance: 500000,
+        emailConfirmed: true,
+      },
+      {
+        name: "Lily James",
+        username: "lilyj",
+        password: await hash("securepass9", 10),
+        email: "lily@example.com",
+        role: "ORGANIZERS",
+        referralNumber: "REF109",
+        walletBalance: 500000,
+        emailConfirmed: true,
+      },
+      {
+        name: "Michael Phelps",
+        username: "michaelph",
+        password: await hash("securepass10", 10),
+        email: "michael@example.com",
+        role: "CUSTOMERS",
+        referralNumber: "REF110",
+        walletBalance: 500000,
+        emailConfirmed: true,
+      },
+    ],
   });
 
-  const customer2 = await prisma.user.create({
-    data: {
-      name: "Jane Smith",
-      username: "janesmith",
-      password: "hashed_password_2",
-      email: "jane.smith@example.com",
-      role: "CUSTOMERS",
-      referralNumber: "REF67890",
-      walletBalance: 1000,
-    },
+  const user1 = await prisma.user.findFirst({ where: { username: "dianap" } });
+  const user2 = await prisma.user.findFirst({ where: { username: "edwardn" } });
+  const user3 = await prisma.user.findFirst({
+    where: { username: "fionaapple" },
   });
-  const salt = await genSalt(10);
+  const user4 = await prisma.user.findFirst({ where: { username: "georgec" } });
+  const user5 = await prisma.user.findFirst({ where: { username: "hannahm" } });
+  const user6 = await prisma.user.findFirst({
+    where: { username: "ianm" },
+  });
+  const user7 = await prisma.user.findFirst({
+    where: { username: "jasminelee" },
+  });
+  const user8 = await prisma.user.findFirst({
+    where: { username: "kevinhart" },
+  });
+  const user9 = await prisma.user.findFirst({ where: { username: "lilyj" } });
+  const user10 = await prisma.user.findFirst({
+    where: { username: "michaelph" },
+  });
+
+  /* -------------------------------------------------------------------------- */
+  /*                                 CREATE CATEGORY                            */
+  /* -------------------------------------------------------------------------- */
+
   const categories = await prisma.category.createMany({
     data: [
       {
-        name: "Music Concert",
-        description: "Live music performances by various artists.",
+        name: "Music",
+        description: "Music events",
         image:
-          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739159348/music_b0xzik.jpg",
-        slug: "music-concert",
+          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739627005/music_lugjyz.jpg",
+        slug: "music",
       },
       {
-        name: "Sports Event",
-        description: "Live sports competitions and games.",
+        name: "Sports",
+        description: "Sports events",
         image:
-          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739159348/sport_mt3ikp.jpg",
-        slug: "sports-event",
+          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739627005/sport_xs1jbc.jpg",
+        slug: "sports",
       },
       {
-        name: "Tech Conference",
-        description:
-          "Conferences and workshops on the latest technology trends.",
+        name: "Tech",
+        description: "Tech events",
         image:
-          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739159349/tech_cis7a0.jpg",
-        slug: "tech-conference",
+          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739627005/tech_fupcar.jpg",
+        slug: "tech",
       },
       {
-        name: "Art Exhibition",
-        description: "Exhibition of various art pieces.",
+        name: "Food & Drink",
+        description: "Food and drink events",
         image:
-          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739159348/art_dutrcp.jpg",
-        slug: "art-exhibition",
+          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739627005/food_dudzkr.jpg",
+        slug: "food-and-drink",
       },
       {
-        name: "Business Seminar",
-        description: "Seminars on business strategies and career development.",
+        name: "Arts & Culture",
+        description: "Arts and culture events",
         image:
-          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739159348/business_yqdiwx.jpg",
-        slug: "business-seminar",
+          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739627004/art_gyf6e6.jpg",
+        slug: "arts-and-culture",
       },
       {
-        name: "Food Festival",
-        description: "Festival featuring various delicious cuisines.",
+        name: "Film & TV",
+        description: "Film and TV events",
         image:
-          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739159348/food_axosei.jpg",
-        slug: "food-festival",
+          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739627004/film_epwaza.jpg",
+        slug: "film-and-tv",
       },
       {
-        name: "Automobile Show",
-        description: "Showcase of the latest automobile models.",
+        name: "Travel & Adventure",
+        description: "Travel and adventure events",
         image:
-          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739159347/automobile_lcd5v2.jpg",
-        slug: "automobile-show",
+          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739627005/travel_lbpbtj.jpg",
+        slug: "travel-and-adventure",
       },
       {
-        name: "Film Concert",
-        description: "Film concerts with large screen projections.",
+        name: "Health & Wellness",
+        description: "Health and wellness events",
         image:
-          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739159348/film_kae9b2.jpg",
-        slug: "film-concert",
+          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739627005/health_ei439o.jpg",
+        slug: "health-and-wellness",
       },
       {
-        name: "Fashion Show",
-        description: "Fashion shows featuring the latest designs.",
+        name: "Education",
+        description: "Education events",
         image:
-          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739159347/fashion_gr3vqt.jpg",
-        slug: "fashion-show",
+          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739627004/education_yrdibk.jpg",
+        slug: "education",
       },
       {
-        name: "Theater Concert",
-        description: "Theater concerts with drama and musical performances.",
+        name: "Community & Social",
+        description: "Community and social events",
         image:
-          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739159349/theatre_jiy5zc.jpg",
-        slug: "theater-concert",
+          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739627004/community_bonnos.jpg",
+        slug: "community-and-social",
       },
     ],
   });
 
-  // Retrieve created categories
-  const createdCategories = await prisma.category.findMany();
+  const category1 = await prisma.category.findFirst({
+    where: { name: "Music" },
+  });
+  const category2 = await prisma.category.findFirst({
+    where: { name: "Sports" },
+  });
+  const category3 = await prisma.category.findFirst({
+    where: { name: "Tech" },
+  });
+  const category4 = await prisma.category.findFirst({
+    where: { name: "Food & Drink" },
+  });
+  const category5 = await prisma.category.findFirst({
+    where: { name: "Arts & Culture" },
+  });
+  const category6 = await prisma.category.findFirst({
+    where: { name: "Film & TV" },
+  });
+  const category7 = await prisma.category.findFirst({
+    where: { name: "Travel & Adventure" },
+  });
+  const category8 = await prisma.category.findFirst({
+    where: { name: "Health & Wellness" },
+  });
+  const category9 = await prisma.category.findFirst({
+    where: { name: "Education" },
+  });
+  const category10 = await prisma.category.findFirst({
+    where: { name: "Community & Social" },
+  });
 
-  // Create Events
   const events = await prisma.event.createMany({
     data: [
       {
-        name: "Rock Night Live",
-        excerpt: "Experience the best of rock music with top artists.",
-        description:
-          "Join us for an unforgettable night of rock music with performances by your favorite artists.",
-        location: "City Auditorium",
-        date: new Date("2025-12-15T20:00:00Z"),
-        price: 50000.0,
+        name: "Rock Concert",
+        excerpt: "A night of rock music",
+        description: "Join us for a night of rock music",
+        date: new Date("2023-10-15T20:00:00Z"),
+        price: 50000,
         image:
-          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158875/rock_ih2gbg.jpg",
-        availableSeats: 1000,
+          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739627190/rock_dvucvj.jpg",
+        location: "City Hall",
+        availableSeats: 100,
+        organizerId: user1.id,
         isFree: false,
-        slug: "rock-night-live",
-        organizerId: 85,
+        slug: "rock-concert",
       },
       {
-        name: "Basketball Championship",
-        excerpt:
-          "Watch the best basketball players compete for the championship.",
-        description:
-          "Experience the thrill of a basketball championship with top players from around the world.",
-        location: "National Stadium",
-        date: new Date("2025-11-20T18:00:00Z"),
-        price: 75000.0,
+        name: "Football Match",
+        excerpt: "A thrilling football match",
+        description: "Watch your favorite team play",
+        date: new Date("2023-11-20T15:00:00Z"),
+        price: 60000,
         image:
-          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158874/basketball_eeylrl.jpg",
-        availableSeats: 5000,
-        isFree: false,
-        slug: "basketball-championship",
-        organizerId: 86,
-      },
-      {
-        name: "Tech Innovators Conference",
-        excerpt: "Learn about the latest innovations in technology.",
-        description:
-          "Join leading experts and innovators to discuss the future of technology.",
-        location: "Convention Center",
-        date: new Date("2025-10-10T09:00:00Z"),
-        price: 0,
-        image:
-          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158875/tech_renhfh.jpg",
-        availableSeats: 2000,
-        isFree: true,
-        slug: "tech-innovators-conference",
-        organizerId: 87,
-      },
-      {
-        name: "Art Exhibition Modern",
-        excerpt: "Exhibition of modern art pieces.",
-        description: "View modern art pieces from renowned artists.",
-        location: "Art Gallery",
-        date: new Date("2025-09-25T10:00:00Z"),
-        price: 30000.0,
-        image:
-          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158874/art_ojnhwk.jpg",
+          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739627188/football_match_f8kac1.jpg",
+        location: "Stadium",
         availableSeats: 500,
+        organizerId: user3.id,
         isFree: false,
-        slug: "art-exhibition-modern",
-        organizerId: 88,
+        slug: "football-match",
       },
       {
-        name: "Business Management Seminar",
-        excerpt: "Seminars on business management and career development.",
-        description:
-          "Learn business management strategies and career development.",
-        location: "Five-Star Hotel",
-        date: new Date("2025-08-15T09:00:00Z"),
-        price: 150000.0,
+        name: "Tech Conference",
+        excerpt: "Learn about the latest tech trends",
+        description: "Join experts in the tech industry",
+        date: new Date("2023-12-10T09:00:00Z"),
+        price: 70000,
         image:
-          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158875/business_rsbj1d.jpg",
-        availableSeats: 300,
+          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739627191/tech_hrqpsd.jpg",
+        location: "Convention Center",
+        availableSeats: 200,
+        organizerId: user5.id,
         isFree: false,
-        slug: "business-management-seminar",
-        organizerId: 89,
+        slug: "tech-conference",
       },
       {
         name: "Food Festival",
-        excerpt: "Festival featuring various delicious cuisines.",
-        description: "Enjoy various delicious cuisines from around the world.",
-        location: "City Park",
-        date: new Date("2025-07-20T12:00:00Z"),
-        price: 25000.0,
+        excerpt: "A food festival",
+        description: "Explore the world of food and culture",
+        date: new Date("2024-01-15T20:00:00Z"),
+        price: 80000,
         image:
-          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158875/food_qklsjx.jpg",
-        availableSeats: 1000,
+          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739627188/food_jlcxks.jpg",
+        location: "Convention Center",
+        availableSeats: 300,
+        organizerId: user7.id,
         isFree: false,
         slug: "food-festival",
-        organizerId: 90,
       },
       {
-        name: "Automobile Show",
-        excerpt: "Showcase of the latest automobile models.",
-        description: "View the latest automobile models from various brands.",
-        location: "Sports Stadium",
-        date: new Date("2025-06-10T09:00:00Z"),
-        price: 100000.0,
+        name: "Art Exhibition",
+        excerpt: "An art exhibition",
+        description: "Discover the world of art",
+        date: new Date("2024-02-20T15:00:00Z"),
+        price: 90000,
         image:
-          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158874/automobile_enursa.jpg",
-        availableSeats: 2000,
+          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739627184/art_isujc8.jpg",
+        location: "Convention Center",
+        availableSeats: 400,
+        organizerId: user9.id,
         isFree: false,
-        slug: "automobile-show",
-        organizerId: 91,
+        slug: "art-exhibition",
       },
       {
-        name: "Film Concert",
-        excerpt: "Film concerts with large screen projections.",
-        description: "Enjoy film concerts with large screen projections.",
-        location: "Film Auditorium",
-        date: new Date("2025-05-25T18:00:00Z"),
-        price: 40000.0,
+        name: "Movie Night",
+        excerpt: "A movie night",
+        description: "Watch your favorite movies",
+        date: new Date("2024-03-10T09:00:00Z"),
+        price: 100000,
         image:
-          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158874/film_event_lfmqg1.jpg",
-        availableSeats: 800,
+          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739627189/movie_night_cudbhg.jpg",
+        location: "Convention Center",
+        availableSeats: 500,
+        organizerId: user1.id,
         isFree: false,
-        slug: "film-concert",
-        organizerId: 92,
+        slug: "movie-night",
       },
       {
-        name: "Fashion Show Latest",
-        excerpt: "Fashion shows featuring the latest designs.",
-        description: "View the latest fashion designs from top designers.",
-        location: "Fashion Gallery",
-        date: new Date("2025-04-15T10:00:00Z"),
-        price: 50000.0,
+        name: "Travel Adventure",
+        excerpt: "A travel adventure",
+        description: "Explore new destinations",
+        date: new Date("2024-04-15T20:00:00Z"),
+        price: 110000,
         image:
-          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158875/fashion_show_vb4ony.jpg",
+          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739627192/travel_adventure_q2dbl3.jpg",
+        location: "Convention Center",
         availableSeats: 600,
+        organizerId: user3.id,
         isFree: false,
-        slug: "fashion-show",
-        organizerId: 93,
+        slug: "travel-adventure",
       },
       {
-        name: "Theater Concert",
-        excerpt: "Theater concerts with drama and musical performances.",
-        description: "Enjoy drama and musical performances by top artists.",
-        location: "City Theater",
-        date: new Date("2025-03-20T19:00:00Z"),
-        price: 60000.0,
+        name: "Health Workshop",
+        excerpt: "A health workshop",
+        description: "Learn about health and wellness",
+        date: new Date("2024-05-20T15:00:00Z"),
+        price: 120000,
         image:
-          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158876/theatre_vktr9r.jpg",
+          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739627189/health-workshop_zns6qb.jpg",
+        location: "Convention Center",
         availableSeats: 700,
+        organizerId: user5.id,
         isFree: false,
-        slug: "theater-concert",
-        organizerId: 94,
+        slug: "health-workshop",
       },
-    ],
-  });
-
-  // await prisma.category.create({
-  //   data: {
-  //     name: "Sports Event",
-  //     description: "Live sports competitions and games.",
-  //     image:
-  //       "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739159348/sport_mt3ikp.jpg",
-  //     slug: "sports-event",
-  //   },
-  // });
-
-  // await prisma.category.create({
-  //   data: {
-  //     name: "Tech Conference",
-  //     description: "Conferences and workshops on the latest technology trends.",
-  //     image:
-  //       "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739159349/tech_cis7a0.jpg",
-  //     slug: "tech-conference",
-  //   },
-  // });
-
-  // await prisma.category.create({
-  //   data: {
-  //     name: "Art Exhibition",
-  //     description: "Exhibition of various art pieces.",
-  //     image:
-  //       "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739159348/art_dutrcp.jpg",
-  //     slug: "art-exhibition",
-  //   },
-  // });
-
-  // await prisma.category.create({
-  //   data: {
-  //     name: "Business Seminar",
-  //     description: "Seminars on business strategies and career development.",
-  //     image:
-  //       "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739159348/business_yqdiwx.jpg",
-  //     slug: "business-seminar",
-  //   },
-  // });
-
-  // await prisma.category.create({
-  //   data: {
-  //     name: "Food Festival",
-  //     description: "Festival featuring various delicious cuisines.",
-  //     image:
-  //       "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739159348/food_axosei.jpg",
-  //     slug: "food-festival",
-  //   },
-  // });
-
-  // await prisma.category.create({
-  //   data: {
-  //     name: "Automobile Show",
-  //     description: "Showcase of the latest automobile models.",
-  //     image:
-  //       "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739159347/automobile_lcd5v2.jpg",
-  //     slug: "automobile-show",
-  //   },
-  // });
-
-  // await prisma.category.create({
-  //   data: {
-  //     name: "Film Concert",
-  //     description: "Film concerts with large screen projections.",
-  //     image:
-  //       "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739159348/film_kae9b2.jpg",
-  //     slug: "film-concert",
-  //   },
-  // });
-
-  // await prisma.category.create({
-  //   data: {
-  //     name: "Fashion Show",
-  //     description: "Fashion shows featuring the latest designs.",
-  //     image:
-  //       "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739159347/fashion_gr3vqt.jpg",
-  //     slug: "fashion-show",
-  //   },
-  // });
-
-  // await prisma.category.create({
-  //   data: {
-  //     name: "Theater Concert",
-  //     description: "Theater concerts with drama and musical performances.",
-  //     image:
-  //       "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739159349/theatre_jiy5zc.jpg",
-  //     slug: "theater-concert",
-  //   },
-  // });
-
-  // Create ORGANIZER-------------------------------------------------------------------------
-  const organizer1 = await prisma.user.create({
-    data: {
-      name: "Event Organizer 1",
-      username: "eventorg1",
-      password: "hashed_password_1",
-      email: "event.organizer1@example.com",
-      role: "ORGANIZERS",
-      referralNumber: "REF11111",
-      walletBalance: 0,
-    },
-  });
-
-  const organizer2 = await prisma.user.create({
-    data: {
-      name: "Event Organizer 2",
-      username: "eventorg2",
-      password: "hashed_password_2",
-      email: "event.organizer2@example.com",
-      role: "ORGANIZERS",
-      referralNumber: "REF22222",
-      walletBalance: 100,
-    },
-  });
-
-  const organizer3 = await prisma.user.create({
-    data: {
-      name: "Event Organizer 3",
-      username: "eventorg3",
-      password: "hashed_password_3",
-      email: "event.organizer3@example.com",
-      role: "ORGANIZERS",
-      referralNumber: "REF33333",
-      walletBalance: 200,
-    },
-  });
-
-  const organizer4 = await prisma.user.create({
-    data: {
-      name: "Event Organizer 4",
-      username: "eventorg4",
-      password: "hashed_password_4",
-      email: "event.organizer4@example.com",
-      role: "ORGANIZERS",
-      referralNumber: "REF44444",
-      walletBalance: 300,
-    },
-  });
-
-  const organizer5 = await prisma.user.create({
-    data: {
-      name: "Event Organizer 5",
-      username: "eventorg5",
-      password: "hashed_password_5",
-      email: "event.organizer5@example.com",
-      role: "ORGANIZERS",
-      referralNumber: "REF55555",
-      walletBalance: 400,
-    },
-  });
-
-  const organizer6 = await prisma.user.create({
-    data: {
-      name: "Event Organizer 6",
-      username: "eventorg6",
-      password: "hashed_password_6",
-      email: "event.organizer6@example.com",
-      role: "ORGANIZERS",
-      referralNumber: "REF66666",
-      walletBalance: 500,
-    },
-  });
-
-  const organizer7 = await prisma.user.create({
-    data: {
-      name: "Event Organizer 7",
-      username: "eventorg7",
-      password: "hashed_password_7",
-      email: "event.organizer7@example.com",
-      role: "ORGANIZERS",
-      referralNumber: "REF77777",
-      walletBalance: 600,
-    },
-  });
-
-  const organizer8 = await prisma.user.create({
-    data: {
-      name: "Event Organizer 8",
-      username: "eventorg8",
-      password: "hashed_password_8",
-      email: "event.organizer8@example.com",
-      role: "ORGANIZERS",
-      referralNumber: "REF88888",
-      walletBalance: 700,
-    },
-  });
-
-  const organizer9 = await prisma.user.create({
-    data: {
-      name: "Event Organizer 9",
-      username: "eventorg9",
-      password: "hashed_password_9",
-      email: "event.organizer9@example.com",
-      role: "ORGANIZERS",
-      referralNumber: "REF99999",
-      walletBalance: 800,
-    },
-  });
-
-  const organizer10 = await prisma.user.create({
-    data: {
-      name: "Event Organizer 10",
-      username: "eventorg10",
-      password: "hashed_password_10",
-      email: "event.organizer10@example.com",
-      role: "ORGANIZERS",
-      referralNumber: "REF101010",
-      walletBalance: 900,
-    },
-  });
-
-  // Create Referrals---------------------------------------------------------------------------------------------------
-  await prisma.referral.create({
-    data: {
-      referredById: organizer1.id,
-      referredUserId: customer1.id,
-    },
-  });
-
-  await prisma.referral.create({
-    data: {
-      referredById: organizer1.id,
-      referredUserId: customer2.id,
-    },
-  });
-
-  // Create Points--------------------------------------------------------------------------------------------------------
-  await prisma.point.create({
-    data: {
-      userId: customer1.id,
-      pointsEarned: 15000,
-      expiresAt: new Date("2023-12-31T23:59:59Z"),
-    },
-  });
-
-  await prisma.point.create({
-    data: {
-      userId: customer2.id,
-      pointsEarned: 20000,
-      expiresAt: new Date("2025-12-31T23:59:59Z"),
-    },
-  });
-
-  // Create Coupons------------------------------------------------------------------------------------------------------------
-  await prisma.coupon.create({
-    data: {
-      userId: customer1.id,
-      discount: 20,
-      expiresAt: new Date("2025-12-31T23:59:59Z"),
-    },
-  });
-
-  await prisma.coupon.create({
-    data: {
-      userId: customer2.id,
-      discount: 25,
-      expiresAt: new Date("2025-12-31T23:59:59Z"),
-    },
-  });
-
-  // Create Events------------------------------------------------------------------------------------------------------------------
-
-  // Create events with references to the promotions
-  const event1 = await prisma.event.create({
-    data: {
-      name: "Rock Night Live",
-      excerpt: "Experience the best of rock music!",
-      description:
-        "A night filled with the best rock bands from around the world.",
-      date: new Date("2023-11-01T20:00:00Z"),
-      price: 50000,
-      image:
-        "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158875/rock_ih2gbg.jpg",
-      location: "City Auditorium",
-      availableSeats: 200,
-      organizerId: organizer1.id,
-      isFree: false,
-      slug: "rock-night-live",
-      CategoryEvent: {
-        create: [
-          {
-            categoryId: 1,
-          },
-        ],
-      },
-    },
-  });
-
-  const event2 = await prisma.event.create({
-    data: {
-      name: "Basketball Championship",
-      excerpt: "Watch the best players compete!",
-      description: "A championship featuring top basketball players.",
-      date: new Date("2023-11-10T14:00:00Z"),
-      price: 75000,
-      image:
-        "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158874/basketball_eeylrl.jpg",
-      location: "Sports Arena",
-      availableSeats: 150,
-      organizerId: organizer2.id,
-      isFree: false,
-      slug: "basketball-championship",
-      CategoryEvent: {
-        create: [
-          {
-            categoryId: 2,
-          },
-        ],
-      },
-    },
-  });
-
-  const event3 = await prisma.event.create({
-    data: {
-      name: "Tech Innovators Conference",
-      excerpt: "Discover the future of technology!",
-      description: "A conference on the latest technological innovations.",
-      date: new Date("2023-11-15T09:00:00Z"),
-      price: 250000,
-      image:
-        "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158875/tech_renhfh.jpg",
-      location: "Convention Center",
-      availableSeats: 100,
-      organizerId: organizer3.id,
-      isFree: false,
-      slug: "tech-innovators-conference",
-      CategoryEvent: {
-        create: [
-          {
-            categoryId: 3,
-          },
-        ],
-      },
-    },
-  });
-
-  const event4 = await prisma.event.create({
-    data: {
-      name: "Art Exhibition Modern",
-      excerpt: "Explore modern art pieces!",
-      description:
-        "An exhibition featuring modern art pieces from various artists.",
-      date: new Date("2023-11-20T10:00:00Z"),
-      price: 30000,
-      image:
-        "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158874/art_ojnhwk.jpg",
-      location: "Art Gallery",
-      availableSeats: 120,
-      organizerId: organizer4.id,
-      isFree: false,
-      slug: "art-exhibition-modern",
-      CategoryEvent: {
-        create: [
-          {
-            categoryId: 4,
-          },
-        ],
-      },
-    },
-  });
-
-  const event5 = await prisma.event.create({
-    data: {
-      name: "Business Management Seminar",
-      excerpt: "Learn about business management!",
-      description:
-        "A seminar on business management strategies and techniques.",
-      date: new Date("2023-11-25T09:00:00Z"),
-      price: 150000,
-      image:
-        "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158875/business_rsbj1d.jpg",
-      location: "Business Center",
-      availableSeats: 80,
-      organizerId: organizer5.id,
-      isFree: false,
-      slug: "business-management-seminar",
-      CategoryEvent: {
-        create: [
-          {
-            categoryId: 5,
-          },
-        ],
-      },
-    },
-  });
-
-  const event6 = await prisma.event.create({
-    data: {
-      name: "Food Festival",
-      excerpt: "Taste the best of local cuisine!",
-      description: "A festival featuring local and international cuisines.",
-      date: new Date("2023-12-01T12:00:00Z"),
-      price: 40000,
-      image:
-        "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158875/food_qklsjx.jpg",
-      location: "City Park",
-      availableSeats: 250,
-      organizerId: organizer6.id,
-      isFree: false,
-      slug: "food-festival",
-      CategoryEvent: {
-        create: [
-          {
-            categoryId: 6,
-          },
-        ],
-      },
-    },
-  });
-
-  const event7 = await prisma.event.create({
-    data: {
-      name: "Automobile Show",
-      excerpt: "See the latest in automotive technology!",
-      description:
-        "A show featuring the latest in automotive technology and design.",
-      date: new Date("2023-12-05T10:00:00Z"),
-      price: 100000,
-      image:
-        "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158874/automobile_enursa.jpg",
-      location: "Exhibition Hall",
-      availableSeats: 180,
-      organizerId: organizer7.id,
-      isFree: false,
-      slug: "automobile-show",
-      CategoryEvent: {
-        create: [
-          {
-            categoryId: 7,
-          },
-        ],
-      },
-    },
-  });
-
-  const event8 = await prisma.event.create({
-    data: {
-      name: "Film Concert Cartoon",
-      excerpt: "Enjoy a night of film and music!",
-      description:
-        "A concert featuring film screenings and live music performances.",
-      date: new Date("2023-12-10T19:00:00Z"),
-      price: 60000,
-      image:
-        "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158874/film_event_lfmqg1.jpg",
-      location: "Cinema Hall",
-      availableSeats: 150,
-      organizerId: organizer8.id,
-      isFree: false,
-      slug: "film-concert",
-      CategoryEvent: {
-        create: [
-          {
-            categoryId: 8,
-          },
-        ],
-      },
-    },
-  });
-
-  const event9 = await prisma.event.create({
-    data: {
-      name: "Fashion Show Latest",
-      excerpt: "Discover the latest fashion trends!",
-      description: "A show featuring the latest fashion trends and designs.",
-      date: new Date("2023-12-15T20:00:00Z"),
-      price: 80000,
-      image:
-        "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158875/fashion_show_vb4ony.jpg",
-      location: "Fashion Center",
-      availableSeats: 120,
-      organizerId: organizer9.id,
-      isFree: false,
-      slug: "fashion-show-latest",
-      CategoryEvent: {
-        create: [
-          {
-            categoryId: 9,
-          },
-        ],
-      },
-    },
-  });
-
-  const event10 = await prisma.event.create({
-    data: {
-      name: "Theater Concert",
-      excerpt: "Experience live theater performances!",
-      description:
-        "A concert featuring live theater performances and musicals.",
-      date: new Date("2023-12-20T19:00:00Z"),
-      price: 70000,
-      image:
-        "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739158876/theatre_vktr9r.jpg",
-      location: "Theater Hall",
-      availableSeats: 100,
-      organizerId: organizer10.id,
-      isFree: false,
-      slug: "theater-concert",
-      CategoryEvent: {
-        create: [
-          {
-            categoryId: 10,
-          },
-        ],
-      },
-    },
-  });
-
-  const promotion1 = {
-    create: [
       {
-        name: "VIP Package",
-        discountValue: 20,
-        limit: 30,
-        referralCode: "VIPROCK",
-        validUntil: new Date("2023-10-25T23:59:59Z"),
+        name: "Education Conference",
+        excerpt: "An education conference",
+        description: "Learn from experts in education",
+        date: new Date("2024-06-10T09:00:00Z"),
+        price: 130000,
+        image:
+          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739627186/education-confrence_jujt4f.jpg",
+        location: "Convention Center",
+        availableSeats: 800,
+        organizerId: user7.id,
+        isFree: false,
+        slug: "education-conference",
       },
-    ],
-  };
-
-  const promotion2 = {
-    create: [
       {
-        name: "Family Day Discount",
-        discountValue: 10,
-        limit: 50,
-        referralCode: "FAMILYDAY",
-        validUntil: new Date("2023-11-05T23:59:59Z"),
+        name: "Community Gathering",
+        excerpt: "A community gathering",
+        description: "Join us for a community event",
+        date: new Date("2024-07-15T20:00:00Z"),
+        price: 140000,
+        image:
+          "https://res.cloudinary.com/dm1cnsldc/image/upload/v1739627185/community-gathering_ftzk89.jpg",
+        location: "Convention Center",
+        availableSeats: 900,
+        organizerId: user9.id,
+        isFree: false,
+        slug: "community-gathering",
       },
     ],
-  };
-
-  const promotion3 = {
-    create: [
-      {
-        name: "Early Bird Discount",
-        discountValue: 20,
-        limit: 50,
-        referralCode: "EARLYBIRD",
-        validUntil: new Date("2023-11-01T23:59:59Z"),
-      },
-    ],
-  };
-
-  const promotion4 = {
-    create: [
-      {
-        name: "Student Discount",
-        discountValue: 15,
-        limit: 40,
-        referralCode: "STUDENT",
-        validUntil: new Date("2023-11-15T23:59:59Z"),
-      },
-    ],
-  };
-
-  const promotion5 = {
-    create: [
-      {
-        name: "Group Discount",
-        discountValue: 10,
-        limit: 20,
-        referralCode: "GROUP",
-        validUntil: new Date("2023-11-20T23:59:59Z"),
-      },
-    ],
-  };
-
-  const promotion6 = {
-    create: [
-      {
-        name: "Foodie Discount",
-        discountValue: 10,
-        limit: 60,
-        referralCode: "FOODIE",
-        validUntil: new Date("2023-11-25T23:59:59Z"),
-      },
-    ],
-  };
-
-  const promotion7 = {
-    create: [
-      {
-        name: "Special Offer",
-        discountValue: 15,
-        limit: 45,
-        referralCode: "SPECIAL",
-        validUntil: new Date("2023-12-01T23:59:59Z"),
-      },
-    ],
-  };
-
-  const promotion8 = {
-    create: [
-      {
-        name: "Film Buff Discount",
-        discountValue: 10,
-        limit: 50,
-        referralCode: "FILMBUFF",
-        validUntil: new Date("2023-12-05T23:59:59Z"),
-      },
-    ],
-  };
-
-  const promotion9 = {
-    create: [
-      {
-        name: "Fashionista Discount",
-        discountValue: 15,
-        limit: 30,
-        referralCode: "FASHIONISTA",
-        validUntil: new Date("2023-12-10T23:59:59Z"),
-      },
-    ],
-  };
-
-  const promotion10 = {
-    create: [
-      {
-        name: "Theater Lover Discount",
-        discountValue: 10,
-        limit: 40,
-        referralCode: "THEATERLOVER",
-        validUntil: new Date("2023-12-15T23:59:59Z"),
-      },
-    ],
-  };
-
-  // Create Registrations
-  const registration1 = await prisma.registration.create({
-    data: {
-      eventId: event1.id,
-      userId: customer1.id,
-    },
   });
 
-  const registration2 = await prisma.registration.create({
-    data: {
-      eventId: event2.id,
-      userId: customer2.id,
-    },
+  const event1 = await prisma.event.findFirst({
+    where: { name: "Rock Concert" },
+  });
+  const event2 = await prisma.event.findFirst({
+    where: { name: "Football Match" },
+  });
+  const event3 = await prisma.event.findFirst({
+    where: { name: "Tech Conference" },
+  });
+  const event4 = await prisma.event.findFirst({
+    where: { name: "Food Festival" },
+  });
+  const event5 = await prisma.event.findFirst({
+    where: { name: "Art Exhibition" },
+  });
+  const event6 = await prisma.event.findFirst({
+    where: { name: "Movie Night" },
+  });
+  const event7 = await prisma.event.findFirst({
+    where: { name: "Travel Adventure" },
+  });
+  const event8 = await prisma.event.findFirst({
+    where: { name: "Health Workshop" },
+  });
+  const event9 = await prisma.event.findFirst({
+    where: { name: "Education Conference" },
+  });
+  const event10 = await prisma.event.findFirst({
+    where: { name: "Community Gathering" },
   });
 
-  // Create Transactions
-  await prisma.transaction.create({
-    data: {
-      amount: 200,
-      eventId: event1.id,
-      registrationId: registration1.id,
-    },
+  await prisma.categoryEvent.createMany({
+    data: [
+      { eventId: event1.id, categoryId: category1.id },
+      { eventId: event2.id, categoryId: category2.id },
+      { eventId: event3.id, categoryId: category3.id },
+      { eventId: event4.id, categoryId: category4.id },
+      { eventId: event5.id, categoryId: category5.id },
+      { eventId: event6.id, categoryId: category6.id },
+      { eventId: event7.id, categoryId: category7.id },
+      { eventId: event8.id, categoryId: category8.id },
+      { eventId: event9.id, categoryId: category9.id },
+      { eventId: event10.id, categoryId: category10.id },
+    ],
   });
 
-  await prisma.transaction.create({
-    data: {
-      amount: 50,
-      eventId: event2.id,
-      registrationId: registration2.id,
-    },
+  await prisma.referral.createMany({
+    data: [
+      { referredById: user1.id, referredUserId: user2.id },
+      { referredById: user2.id, referredUserId: user3.id },
+      { referredById: user3.id, referredUserId: user4.id },
+      { referredById: user4.id, referredUserId: user5.id },
+      { referredById: user5.id, referredUserId: user6.id },
+      { referredById: user6.id, referredUserId: user7.id },
+      { referredById: user7.id, referredUserId: user8.id },
+      { referredById: user8.id, referredUserId: user9.id },
+      { referredById: user9.id, referredUserId: user10.id },
+    ],
   });
 
-  //   --------------------------------------------------------------------------------------------------------------
-  // Create Attendees
-  const attendees = [
-    {
-      eventId: event1.id,
-      name: "John Doe",
-      email: "john.doe@example.com",
-      hasPaid: true,
-      referralCode: "VIPROCK",
-    },
-    {
-      eventId: event2.id,
-      name: "Jane Smith",
-      email: "jane.smith@example.com",
-      hasPaid: true,
-      referralCode: "FAMILYDAY",
-    },
-    {
-      eventId: event3.id,
-      name: "Alice Johnson",
-      email: "alice.johnson@example.com",
-      hasPaid: true,
-      referralCode: "EARLYBIRD",
-    },
-    {
-      eventId: event4.id,
-      name: "Bob Brown",
-      email: "bob.brown@example.com",
-      hasPaid: true,
-      referralCode: "STUDENT",
-    },
-    {
-      eventId: event5.id,
-      name: "Charlie Davis",
-      email: "charlie.davis@example.com",
-      hasPaid: true,
-      referralCode: "GROUP",
-    },
-    {
-      eventId: event6.id,
-      name: "Diana Evans",
-      email: "diana.evans@example.com",
-      hasPaid: true,
-      referralCode: "FOODIE",
-    },
-    {
-      eventId: event7.id,
-      name: "Ethan Foster",
-      email: "ethan.foster@example.com",
-      hasPaid: true,
-      referralCode: "SPECIAL",
-    },
-    {
-      eventId: event8.id,
-      name: "Fiona Gates",
-      email: "fiona.gates@example.com",
-      hasPaid: true,
-      referralCode: "FILMBUFF",
-    },
-    {
-      eventId: event9.id,
-      name: "George Hill",
-      email: "george.hill@example.com",
-      hasPaid: true,
-      referralCode: "FASHIONISTA",
-    },
-    {
-      eventId: event10.id,
-      name: "Hannah Ivan",
-      email: "hannah.ivan@example.com",
-      hasPaid: true,
-      referralCode: "THEATERLOVER",
-    },
-  ];
+  await prisma.point.createMany({
+    data: [
+      {
+        userId: user1.id,
+        pointsEarned: 50,
+        expiresAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        userId: user2.id,
+        pointsEarned: 75,
+        expiresAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        userId: user3.id,
+        pointsEarned: 100,
+        expiresAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        userId: user4.id,
+        pointsEarned: 125,
+        expiresAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        userId: user5.id,
+        pointsEarned: 150,
+        expiresAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        userId: user6.id,
+        pointsEarned: 175,
+        expiresAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        userId: user7.id,
+        pointsEarned: 200,
+        expiresAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        userId: user8.id,
+        pointsEarned: 225,
+        expiresAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        userId: user9.id,
+        pointsEarned: 250,
+        expiresAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        userId: user10.id,
+        pointsEarned: 275,
+        expiresAt: new Date("2024-01-01T00:00:00Z"),
+      },
+    ],
+  });
 
-  for (const attendee of attendees) {
-    await prisma.attendee.create({
-      data: attendee,
-    });
-  }
+  await prisma.coupon.createMany({
+    data: [
+      {
+        code: "COUPON1",
+        discount: 10,
+        userId: user1.id,
+        expiresAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        code: "COUPON2",
+        discount: 20,
+        userId: user2.id,
+        expiresAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        code: "COUPON3",
+        discount: 30,
+        userId: user3.id,
+        expiresAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        code: "COUPON4",
+        discount: 40,
+        userId: user4.id,
+        expiresAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        code: "COUPON5",
+        discount: 50,
+        userId: user5.id,
+        expiresAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        code: "COUPON6",
+        discount: 60,
+        userId: user6.id,
+        expiresAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        code: "COUPON7",
+        discount: 70,
+        userId: user7.id,
+        expiresAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        code: "COUPON8",
+        discount: 80,
+        userId: user8.id,
+        expiresAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        code: "COUPON9",
+        discount: 90,
+        userId: user9.id,
+        expiresAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        code: "COUPON10",
+        discount: 100,
+        userId: user10.id,
+        expiresAt: new Date("2024-01-01T00:00:00Z"),
+      },
+    ],
+  });
 
-  console.info("Seed data inserted successfully.");
+  await prisma.confirmToken.createMany({
+    data: [
+      {
+        userId: user1.id,
+        token: "TOKEN1",
+        expiredDate: new Date("2023-12-31T23:59:59Z"),
+        used: false,
+      },
+      {
+        userId: user2.id,
+        token: "TOKEN2",
+        expiredDate: new Date("2023-12-31T23:59:59Z"),
+        used: false,
+      },
+      {
+        userId: user3.id,
+        token: "TOKEN3",
+        expiredDate: new Date("2023-12-31T23:59:59Z"),
+        used: false,
+      },
+      {
+        userId: user4.id,
+        token: "TOKEN4",
+        expiredDate: new Date("2023-12-31T23:59:59Z"),
+        used: false,
+      },
+      {
+        userId: user5.id,
+        token: "TOKEN5",
+        expiredDate: new Date("2023-12-31T23:59:59Z"),
+        used: false,
+      },
+      {
+        userId: user6.id,
+        token: "TOKEN6",
+        expiredDate: new Date("2023-12-31T23:59:59Z"),
+        used: false,
+      },
+      {
+        userId: user7.id,
+        token: "TOKEN7",
+        expiredDate: new Date("2023-12-31T23:59:59Z"),
+        used: false,
+      },
+      {
+        userId: user8.id,
+        token: "TOKEN8",
+        expiredDate: new Date("2023-12-31T23:59:59Z"),
+        used: false,
+      },
+      {
+        userId: user9.id,
+        token: "TOKEN9",
+        expiredDate: new Date("2023-12-31T23:59:59Z"),
+        used: false,
+      },
+      {
+        userId: user10.id,
+        token: "TOKEN10",
+        expiredDate: new Date("2023-12-31T23:59:59Z"),
+        used: false,
+      },
+    ],
+  });
+
+  await prisma.registration.createMany({
+    data: [
+      { userId: user1.id, eventId: event1.id },
+      { userId: user2.id, eventId: event2.id },
+      { userId: user3.id, eventId: event3.id },
+      { userId: user4.id, eventId: event4.id },
+      { userId: user5.id, eventId: event5.id },
+      { userId: user6.id, eventId: event6.id },
+      { userId: user7.id, eventId: event7.id },
+      { userId: user8.id, eventId: event8.id },
+      { userId: user9.id, eventId: event9.id },
+      { userId: user10.id, eventId: event10.id },
+    ],
+  });
+  const registration1 = await prisma.registration.findFirst({
+    where: { userId: user1.id, eventId: event1.id },
+  });
+  const registration2 = await prisma.registration.findFirst({
+    where: { userId: user2.id, eventId: event2.id },
+  });
+  const registration3 = await prisma.registration.findFirst({
+    where: { userId: user3.id, eventId: event3.id },
+  });
+  const registration4 = await prisma.registration.findFirst({
+    where: { userId: user4.id, eventId: event4.id },
+  });
+  const registration5 = await prisma.registration.findFirst({
+    where: { userId: user5.id, eventId: event5.id },
+  });
+  const registration6 = await prisma.registration.findFirst({
+    where: { userId: user6.id, eventId: event6.id },
+  });
+  const registration7 = await prisma.registration.findFirst({
+    where: { userId: user7.id, eventId: event7.id },
+  });
+  const registration8 = await prisma.registration.findFirst({
+    where: { userId: user8.id, eventId: event8.id },
+  });
+  const registration9 = await prisma.registration.findFirst({
+    where: { userId: user9.id, eventId: event9.id },
+  });
+  const registration10 = await prisma.registration.findFirst({
+    where: { userId: user10.id, eventId: event10.id },
+  });
+
+  await prisma.transaction.createMany({
+    data: [
+      {
+        amount: 50000,
+        userId: user1.id,
+        eventId: event1.id,
+        registrationId: registration1.id,
+      },
+      {
+        amount: 60000,
+        userId: user2.id,
+        eventId: event2.id,
+        registrationId: registration2.id,
+      },
+      {
+        amount: 70000,
+        userId: user3.id,
+        eventId: event3.id,
+        registrationId: registration3.id,
+      },
+      {
+        amount: 80000,
+        userId: user4.id,
+        eventId: event4.id,
+        registrationId: registration4.id,
+      },
+      {
+        amount: 90000,
+        userId: user5.id,
+        eventId: event5.id,
+        registrationId: registration5.id,
+      },
+      {
+        amount: 100000,
+        userId: user6.id,
+        eventId: event6.id,
+        registrationId: registration6.id,
+      },
+      {
+        amount: 110000,
+        userId: user7.id,
+        eventId: event7.id,
+        registrationId: registration7.id,
+      },
+      {
+        amount: 120000,
+        userId: user8.id,
+        eventId: event8.id,
+        registrationId: registration8.id,
+      },
+      {
+        amount: 130000,
+        userId: user9.id,
+        eventId: event9.id,
+        registrationId: registration9.id,
+      },
+      {
+        amount: 140000,
+        userId: user10.id,
+        eventId: event10.id,
+        registrationId: registration10.id,
+      },
+    ],
+  });
+
+  const transactions = await prisma.transaction.findMany();
+
+  await prisma.receipt.createMany({
+    data: [
+      {
+        receiptCode: "RC1",
+        receiptTotal: 50.0,
+        transactionId: transactions[0].id,
+      },
+      {
+        receiptCode: "RC2",
+        receiptTotal: 30.0,
+        transactionId: transactions[1].id,
+      },
+      {
+        receiptCode: "RC3",
+        receiptTotal: 100.0,
+        transactionId: transactions[2].id,
+      },
+      {
+        receiptCode: "RC4",
+        receiptTotal: 75.0,
+        transactionId: transactions[3].id,
+      },
+      {
+        receiptCode: "RC5",
+        receiptTotal: 45.0,
+        transactionId: transactions[4].id,
+      },
+      {
+        receiptCode: "RC6",
+        receiptTotal: 60.0,
+        transactionId: transactions[5].id,
+      },
+      {
+        receiptCode: "RC7",
+        receiptTotal: 90.0,
+        transactionId: transactions[6].id,
+      },
+      {
+        receiptCode: "RC8",
+        receiptTotal: 80.0,
+        transactionId: transactions[7].id,
+      },
+      {
+        receiptCode: "RC9",
+        receiptTotal: 55.0,
+        transactionId: transactions[8].id,
+      },
+      {
+        receiptCode: "RC10",
+        receiptTotal: 70.0,
+        transactionId: transactions[9].id,
+      },
+    ],
+  });
+
+  await prisma.attendee.createMany({
+    data: [
+      {
+        eventId: event1.id,
+        name: "edwardn",
+        email: "edward@example",
+        hasPaid: true,
+      },
+    ],
+  });
+
+  await prisma.eventReview.createMany({
+    data: [
+      {
+        eventId: event1.id,
+        overallExperience: 5,
+        qualityOfEvent: 4,
+        suggestions: "Great event!",
+      },
+      {
+        eventId: event2.id,
+        overallExperience: 4,
+        qualityOfEvent: 5,
+        suggestions: "Very exciting!",
+      },
+      {
+        eventId: event3.id,
+        overallExperience: 5,
+        qualityOfEvent: 5,
+        suggestions: "Excellent!",
+      },
+      {
+        eventId: event4.id,
+        overallExperience: 4,
+        qualityOfEvent: 4,
+        suggestions: "Good event.",
+      },
+      {
+        eventId: event5.id,
+        overallExperience: 5,
+        qualityOfEvent: 5,
+        suggestions: "Excellent!",
+      },
+      {
+        eventId: event6.id,
+        overallExperience: 4,
+        qualityOfEvent: 4,
+        suggestions: "Good event.",
+      },
+      {
+        eventId: event7.id,
+        overallExperience: 5,
+        qualityOfEvent: 5,
+        suggestions: "Excellent!",
+      },
+      {
+        eventId: event8.id,
+        overallExperience: 4,
+        qualityOfEvent: 4,
+        suggestions: "Good event.",
+      },
+      {
+        eventId: event9.id,
+        overallExperience: 5,
+        qualityOfEvent: 5,
+        suggestions: "Excellent!",
+      },
+      {
+        eventId: event10.id,
+        overallExperience: 4,
+        qualityOfEvent: 4,
+        suggestions: "Good event.",
+      },
+    ],
+  });
+
+  await prisma.voucher.createMany({
+    data: [
+      {
+        code: "VOUCHER1",
+        discountRate: 10,
+        stock: 100,
+        eventId: event1.id,
+        expiredAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        code: "VOUCHER2",
+        discountRate: 20,
+        stock: 150,
+        eventId: event2.id,
+        expiredAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        code: "VOUCHER3",
+        discountRate: 30,
+        stock: 200,
+        eventId: event3.id,
+        expiredAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        code: "VOUCHER4",
+        discountRate: 40,
+        stock: 250,
+        eventId: event4.id,
+        expiredAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        code: "VOUCHER5",
+        discountRate: 50,
+        stock: 300,
+        eventId: event5.id,
+        expiredAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        code: "VOUCHER6",
+        discountRate: 60,
+        stock: 350,
+        eventId: event6.id,
+        expiredAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        code: "VOUCHER7",
+        discountRate: 70,
+        stock: 400,
+        eventId: event7.id,
+        expiredAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        code: "VOUCHER8",
+        discountRate: 80,
+        stock: 450,
+        eventId: event8.id,
+        expiredAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        code: "VOUCHER9",
+        discountRate: 90,
+        stock: 500,
+        eventId: event9.id,
+        expiredAt: new Date("2024-01-01T00:00:00Z"),
+      },
+      {
+        code: "VOUCHER10",
+        discountRate: 100,
+        stock: 550,
+        eventId: event10.id,
+        expiredAt: new Date("2024-01-01T00:00:00Z"),
+      },
+    ],
+  });
+
+  await prisma.wallet.createMany({
+    data: [
+      { userId: user1.id, balance: 100.0 },
+      { userId: user2.id, balance: 200.0 },
+      { userId: user3.id, balance: 150.0 },
+      { userId: user4.id, balance: 300.0 },
+      { userId: user5.id, balance: 250.0 },
+      { userId: user6.id, balance: 400.0 },
+      { userId: user7.id, balance: 350.0 },
+      { userId: user8.id, balance: 500.0 },
+      { userId: user9.id, balance: 450.0 },
+      { userId: user10.id, balance: 600.0 },
+    ],
+  });
 }
 
 main()
   .catch((e) => {
-    console.error(e);
-    process.exit(1);
+    throw e;
   })
   .finally(async () => {
     await prisma.$disconnect();

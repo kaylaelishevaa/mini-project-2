@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-// Define the AllEvent interface here
 interface AllEvent {
   id: number;
   name: string;
@@ -20,7 +19,6 @@ interface AllEvent {
 
 const EVENTS_PER_PAGE = 6;
 
-// EventCard component
 const EventCard = ({ event }: { event: AllEvent }) => (
   <div className="bg-white p-4 rounded shadow">
     <div className="relative h-48 overflow-hidden rounded-t">
@@ -140,10 +138,6 @@ export default function EventListing() {
     filterEvents();
   }, [searchTerm, selectedCategory, selectedLocation, events]);
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  };
-
   const debouncedSearch = (
     func: (event: React.ChangeEvent<HTMLInputElement>) => void,
     delay: number
@@ -187,7 +181,6 @@ export default function EventListing() {
 
   return (
     <div className="container mx-auto p-4">
-      <Navbar />
       <div className="mt-8">
         <h1 className="text-4xl font-bold mb-4 text-center">Upcoming Events</h1>
         <div className="mb-4">
@@ -195,7 +188,7 @@ export default function EventListing() {
             type="text"
             placeholder="Search events..."
             value={searchTerm}
-            onChange={handleDebouncedSearch}
+            onChange={handleDebouncedSearch} // Corrected here
             className="w-full p-2 border rounded"
           />
         </div>

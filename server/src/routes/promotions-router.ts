@@ -1,14 +1,18 @@
 import express from "express";
 
 import {
-  CreatePromotions,
-  GetSinglePromotions,
-  GetAllPromotions,
-} from "../controllers/promotion-controller";
+  CreateVouchers,
+  GetSingleVouchers,
+  GetAllVouchers,
+} from "../controllers/voucher-controller";
+import { roleGuard, verifyToken } from "../middleware/auth-middleware";
 
 const router = express.Router();
 
-router.route("/").get(GetAllPromotions).post(CreatePromotions);
-router.route("/:id").get(GetSinglePromotions);
+router
+  .route("/")
+  .get(GetAllVouchers)
+  .post(verifyToken, roleGuard("ORGANIZERS"), CreateVouchers);
+router.route("/:id").get(GetSingleVouchers);
 
 export default router;

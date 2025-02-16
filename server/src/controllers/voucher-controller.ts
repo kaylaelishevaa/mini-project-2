@@ -7,18 +7,18 @@ const prisma = new PrismaClient();
 const app = express();
 app.use(express.json());
 
-export async function CreatePromotions(
+export async function CreateVouchers(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
-    // const organizerId = req.user?.id;
+    const organizerId = req.user?.id;
 
-    // if (!organizerId) {
-    //   res.status(401).json({ message: "Unauthorized! Please login." });
-    //   return;
-    // }
+    if (!organizerId) {
+      res.status(401).json({ message: "Unauthorized! Please login." });
+      return;
+    }
 
     const { eventId, name, discountValue, limit, referralCode, validUntil } =
       req.body;
@@ -50,85 +50,84 @@ export async function CreatePromotions(
       return;
     }
 
-    const promotionData = {
+    const VoucherData = {
       eventId: +eventId,
-      name,
-      discountValue: parseInt(discountValue, 10),
-      limit: parseInt(limit, 10),
-      referralCode,
-      validUntil: new Date(validUntil),
+      discountRate: parseInt(discountValue, 10),
+      stock: Number(limit),
+      code: referralCode,
+      expiredAt: new Date(validUntil),
     };
 
-    const promotion = await prisma.promotion.create({
-      data: promotionData,
+    const Voucher = await prisma.voucher.create({
+      data: VoucherData,
     });
 
     res
       .status(201)
-      .json({ ok: true, message: "New Promotion added", data: promotion });
+      .json({ ok: true, message: "New Voucher added", data: Voucher });
   } catch (error: unknown) {
     if (error instanceof Error) {
-      const errorMessage = `Unexpected error in CreatePromotion: ${error.message}`;
+      const errorMessage = `Unexpected error in CreateVoucher: ${error.message}`;
       logger(errorMessage);
       next(error);
     } else {
-      const errorMessage = `Unknown error occurred in CreatePromotion`;
+      const errorMessage = `Unknown error occurred in CreateVoucher`;
       logger(errorMessage);
       next(error);
     }
   }
 }
 
-export async function GetSinglePromotions(
+export async function GetSingleVouchers(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const promotion = await prisma.promotion.findUnique({
+    const Voucher = await prisma.voucher.findUnique({
       where: { id: +req.params.id },
       include: { event: true },
     });
 
-    if (!promotion) {
-      const errorMessage = `Promotion with ID ${req.params.id} not found`;
+    if (!Voucher) {
+      const errorMessage = `Voucher with ID ${req.params.id} not found`;
       logger(errorMessage);
       res.status(404).json({ message: errorMessage });
       return;
     }
 
-    res.status(200).json({ ok: true, data: promotion });
+    res.status(200).json({ ok: true, data: Voucher });
   } catch (error: unknown) {
     if (error instanceof Error) {
-      const errorMessage = `Unexpected error in GetSinglePromotion: ${error.message}`;
+      const errorMessage = `Unexpected error in GetSingleVoucher: ${error.message}`;
       logger(errorMessage);
       next(error);
     } else {
-      const errorMessage = `Unknown error occurred in GetSinglePromotion`;
+      const errorMessage = `Unknown error occurred in GetSingleVoucher`;
       logger(errorMessage);
       next(error);
     }
   }
 }
 
-export async function GetAllPromotions(
+export async function GetAllVouchers(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const promotions = await prisma.promotion.findMany({
+    const Vouchers = await prisma.voucher.findMany({
       include: { event: true },
     });
 
-    res.status(200).json({ ok: true, data: promotions });
+    res.status(200).json({ ok: true, data: Vouchers });
   } catch (error: unknown) {
     if (error instanceof Error) {
-      const errorMessage = `Unexpected error in GetAllPromotions: ${error.message}`;
+      const errorMessage = `Unexpected error in GetAllVouchers: ${error.message}`;
       logger(errorMessage);
       next(error);
     } else {
-      const errorMessage = `Unknown error occurred in GetAllPromotions`;
+      const errorMessage = `Unknown error occurred in GetAllVouchers`;
       logger(errorMessage);
       next(error);
     }

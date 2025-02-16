@@ -41,3 +41,20 @@ export async function GetAllCategories(
     next(error);
   }
 }
+
+export async function GetEventByCategory(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const events = await prisma.categoryEvent.findMany({
+      where: { categoryId: +req.params.id },
+      include: { Event: true },
+    });
+
+    res.status(200).json({ ok: true, data: events });
+  } catch (error) {
+    next(error);
+  }
+}

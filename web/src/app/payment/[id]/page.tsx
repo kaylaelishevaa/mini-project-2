@@ -33,10 +33,6 @@ export default function PaymentPage({ params }) {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    // if (!params.eventId) {
-    //   setMessage("No event ID found in URL.");
-    //   return;
-    // }
     fetchEventDetail();
     fetchUserWallet();
     fetchUserPoints();

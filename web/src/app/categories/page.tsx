@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 const ListCategory = () => {
-  const [categories, setCategories] = useState({ data: [] }); // Initialize state with an object containing a 'data' property
+  const [categories, setCategories] = useState({ data: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -54,8 +54,10 @@ const ListCategory = () => {
     );
   }
 
+  console.log(categories);
+
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="max-w-4xl mx-auto p-4 min-h-screen">
       <h1 className="text-3xl font-bold mb-8">Categories</h1>
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {categories.data.map((category) => (
@@ -64,11 +66,11 @@ const ListCategory = () => {
             className="bg-white rounded-lg p-4 flex flex-col items-center hover:bg-gray-100 transition-colors duration-300"
           >
             <Link
-              href={`/categories/${category.slug}`}
+              href={`/categories/${category.id}`}
               className="flex flex-col items-center"
             >
               <Image
-                src={category.image} // Ensure the category object has an 'image' property
+                src={category.image}
                 alt={category.name}
                 width={400}
                 height={400}

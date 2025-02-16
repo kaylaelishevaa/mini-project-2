@@ -8,12 +8,11 @@ export async function verifyToken(
   next: NextFunction
 ) {
   try {
-    console.log("=> verifyToken middleware is called");
-    console.log("Cookies found:", req.cookies);
     const token = req.cookies.token;
+    console.log(token);
 
     if (!token) {
-      res.status(401).json({ message: "No token provided!!!!" });
+      res.status(401).json({ message: "No token provided" });
       return;
     }
 
@@ -22,11 +21,12 @@ export async function verifyToken(
       process.env.JWT_SECRET_KEY as string
     ) as CustomJWTPayload;
 
-    console.log(verifiedUser)
-    console.log(token)
-    
-    req.user = verifiedUser;
+    if (!verifiedUser) {
+      res.status(401).json({ message: "Invalid token" });
+      return;
+    }
 
+    req.user = verifiedUser;
 
     next();
   } catch (error) {

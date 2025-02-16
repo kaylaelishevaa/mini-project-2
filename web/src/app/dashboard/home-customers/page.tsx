@@ -7,6 +7,7 @@ export default function CustomersPage() {
   const [points, setPoints] = useState<number>(0);
   const [referralNumber, setReferralNumber] = useState<string>("");
   const [message, setMessage] = useState("");
+  const [customerName, setCustomerName] = useState<string>(""); // New state variable for customer name
 
   useEffect(() => {
     fetchUserInfo();
@@ -22,6 +23,7 @@ export default function CustomersPage() {
       setWalletBalance(data.wallet || 0);
       setPoints(data.points || 0);
       setReferralNumber(data.referralNumber || "");
+      setCustomerName(data.name || ""); // Set customer name from API response
     } catch (error) {
       console.error(error);
     }
@@ -37,7 +39,11 @@ export default function CustomersPage() {
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-2xl mx-auto bg-white p-6 rounded shadow">
-        <h1 className="text-2xl font-bold mb-4">My Account (Customers)</h1>
+        <h1 className="text-2xl font-bold mb-4">
+          {customerName
+            ? `Welcome, ${customerName}!`
+            : "My Account (Customers)"}
+        </h1>
 
         {message && <p className="text-green-600 mb-2">{message}</p>}
 

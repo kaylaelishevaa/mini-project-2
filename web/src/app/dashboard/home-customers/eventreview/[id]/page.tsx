@@ -1,9 +1,7 @@
 "use client";
-import Footer from "@/components/footer";
-import Navbar from "@/components/navbar";
 import { useState } from "react";
 
-export default function ReviewPage() {
+export default function ReviewPage({ params }) {
   const [overallExperience, setOverallExperience] = useState(0);
   const [qualityOfEvent, setQualityOfEvent] = useState(0);
   const [suggestions, setSuggestions] = useState("");
@@ -16,7 +14,6 @@ export default function ReviewPage() {
   const handleQualityOfEventChange = (newRating) => {
     setQualityOfEvent(newRating);
   };
-
   const handleSuggestionsChange = (event) => {
     setSuggestions(event.target.value);
   };
@@ -34,11 +31,10 @@ export default function ReviewPage() {
     }
 
     const newReview = {
+      eventId: Number((await params).id),
       overallExperience,
       qualityOfEvent,
       suggestions,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     };
 
     try {
@@ -55,7 +51,6 @@ export default function ReviewPage() {
       }
 
       const data = await response.json();
-      console.log("Review submitted successfully:", data);
 
       // Update the state with the new review
       setReviews([newReview, ...reviews]);
@@ -70,7 +65,6 @@ export default function ReviewPage() {
 
   return (
     <section>
-      <Navbar />
       <div className="container mx-auto py-40 pt-32 px-40">
         <h1 className="text-2xl font-semibold text-center mb-6">
           Event Reviews and Ratings
@@ -141,7 +135,7 @@ export default function ReviewPage() {
           </button>
         </form>
 
-        <h2 className="text-xl font-semibold mb-4">Recent Reviews</h2>
+        {/* <h2 className="text-xl font-semibold mb-4">Recent Reviews</h2>
         <div className="space-y-4">
           {reviews.length === 0 ? (
             <p>No reviews yet. Be the first to review the event!</p>
@@ -193,9 +187,8 @@ export default function ReviewPage() {
               </div>
             ))
           )}
-        </div>
+        </div> */}
       </div>
-      <Footer />
     </section>
   );
 }

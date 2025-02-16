@@ -35,7 +35,7 @@ export default function DashboardPage() {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(
     null
   );
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [viewMode, setViewMode] = useState<"daily" | "monthly" | "yearly">(
     "daily"
@@ -51,7 +51,7 @@ export default function DashboardPage() {
       setError("");
 
       const response = await fetch("http://localhost:8000/api/v1/dashboard", {
-        credentials: "include", 
+        credentials: "include",
       });
       if (!response.ok) {
         throw new Error(
@@ -113,7 +113,6 @@ export default function DashboardPage() {
     chartData = createRechartsData(stats.yearly);
   }
 
-export default function DashboardOrganizer() {
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-7xl mx-auto">
@@ -164,7 +163,7 @@ export default function DashboardOrganizer() {
               <tbody>
                 {events.map((evt) => {
                   const registrationCount = evt.registrations.length;
-                  const totalAmount = evt.transactions.reduce(
+                  const totalAmount = evt.Transaction.reduce(
                     (sum, tx) => sum + Number(tx.amount),
                     0
                   );
@@ -172,7 +171,7 @@ export default function DashboardOrganizer() {
                     <tr key={evt.id} className="border-b hover:bg-gray-50">
                       <td className="py-2 px-3">{evt.name}</td>
                       <td className="py-2 px-3">{registrationCount}</td>
-                      <td className="py-2 px-3">{evt.transactions.length}</td>
+                      <td className="py-2 px-3">{evt.Transaction.length}</td>
                       <td className="py-2 px-3">
                         ${totalAmount.toLocaleString()}
                       </td>

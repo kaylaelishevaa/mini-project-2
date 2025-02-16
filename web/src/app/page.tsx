@@ -1,11 +1,23 @@
-import HeroSection from "../components/homepage/herosection";
-import Navbar from "../components/navbar";
-import Footer from "../components/footer";
+import LandingSection from "../components/landing";
+import Naration from "../components/naration";
+import Welcome from "../components/welcome";
+import ListCategory from "../components/listcategory";
 
 export default async function HomePage() {
   return (
     <div>
-      <HeroSection />
+      <div>
+        <LandingSection />
+      </div>
+      <div>
+        <Naration />
+      </div>
+      <div className="mt-20">
+        <Welcome />
+      </div>
+      <div>
+        <ListCategory />
+      </div>
     </div>
   );
 }

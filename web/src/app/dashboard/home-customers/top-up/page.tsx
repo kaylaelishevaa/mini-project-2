@@ -101,3 +101,63 @@ export default function TopUpPage() {
     </div>
   );
 }
+
+// "use client";
+
+// import React, { useState } from "react";
+
+// const TopUpPage: React.FC = () => {
+//   const [amount, setAmount] = useState<number>(0);
+
+//   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+//     const value = parseFloat(event.target.value);
+//     if (!isNaN(value)) {
+//       setAmount(value);
+//     }
+//   };
+
+//   const handleTopUp = async () => {
+//     alert(`Top up saldo sebesar ${amount} berhasil!`);
+//     await fetch("http://localhost:8000/api/v1/wallet/topup", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ amount }),
+//       credentials: "include",
+//     });
+//   };
+
+//   return (
+//     <div className="flex items-center justify-center min-h-screen bg-gray-100">
+//       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+//         <h2 className="text-2xl font-bold mb-6">Top Up Saldo</h2>
+//         <form>
+//           <div className="mb-4">
+//             <label
+//               htmlFor="amount"
+//               className="block text-gray-700 font-bold mb-2"
+//             >
+//               Jumlah Saldo
+//             </label>
+//             <input
+//               type="number"
+//               id="amount"
+//               value={amount}
+//               onChange={handleAmountChange}
+//               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+//               placeholder="Masukkan jumlah saldo"
+//             />
+//           </div>
+//           <button
+//             type="button"
+//             onClick={handleTopUp}
+//             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+//           >
+//             Konfirmasi Top Up
+//           </button>
+//         </form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default TopUpPage;

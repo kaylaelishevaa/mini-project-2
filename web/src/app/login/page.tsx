@@ -52,10 +52,10 @@ export default function LoginPage() {
       // cek meData.role => "CUSTOMERS" / "ORGANIZERS" / dsb
       if (meData.role === "CUSTOMERS") {
         // langsung ke /home-customers
-        router.push("/home-customers");
+        router.push("/dashboard/home-customers");
       } else if (meData.role === "ORGANIZERS") {
         // langsung ke /home-organizers
-        router.push("/home-organizers");
+        router.push("/dashboard/home-organizers");
       } else {
         // kalau role default atau null => user must select role
         router.push("/select-role");

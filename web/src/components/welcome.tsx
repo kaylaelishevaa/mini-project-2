@@ -21,13 +21,13 @@ interface AllEvent {
 export default function BlogPage() {
   const [events, setEvents] = useState<AllEvent[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        // Replace with your production API endpoint
+        setLoading(true);
         const response = await fetch("http://localhost:8000/api/v1/events");
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -78,20 +78,28 @@ export default function BlogPage() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-4xl font-bold mb-4 text-center">
+      <h1 className="text-red-900 text-4xl font-bold mb-4 text-center">
         See Best Event in the World
       </h1>
+      <p className="mb-10 text-center">
+        I hope this message finds you well! I am thrilled to share an exciting
+        opportunity that you won't want to miss. We are hosting an extraordinary
+        event that promises to be both engaging and memorable, and we would love
+        for you to be a part of it!
+      </p>
       <div className="relative w-full">
         {events.length > 0 && (
-          <div className="bg-white rounded-lg shadow-lg p-6 mx-6 flex flex-col items-center">
+          <div className=" rounded-lg p-6 mx-6 flex flex-col items-center">
             <div className="relative w-full h-96">
               {isValidImageUrl(currentEvent.image) ? (
-                <Image
-                  src={currentEvent.image}
-                  alt={currentEvent.name}
-                  fill
-                  className="rounded-lg mb-4 object-cover"
-                />
+                <Link href={`/eventlisting/${currentEvent.id}`}>
+                  <Image
+                    src={currentEvent.image}
+                    alt={currentEvent.name}
+                    fill
+                    className="rounded-lg mb-4 object-cover"
+                  />
+                </Link>
               ) : (
                 <div className="rounded-lg mb-4 object-cover bg-gray-300 h-full w-full flex items-center justify-center">
                   <p className="text-gray-500">Invalid Image URL</p>
@@ -103,18 +111,11 @@ export default function BlogPage() {
                 {currentEvent.name}
               </h3>
               <p className="text-gray-700 text-center">
-                {currentEvent.description}
+                {currentEvent.excerpt}
               </p>
             </div>
 
-            <div className="flex space-x-2 mt-4">
-              <Link
-                href={`/eventlisting/${currentEvent.id}`}
-                className="bg-red-900 text-white px-4 py-2 rounded hover:bg-black transition-colors duration-300"
-              >
-                Detail Event
-              </Link>
-            </div>
+            <div className="flex space-x-2 mt-4"></div>
           </div>
         )}
         {events.length > 1 && (
