@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import LogoutModal from "./Logout";
-import Image from "next/image"
+import Image from "next/image";
 
 interface UserInfo {
   id: number;
@@ -28,12 +28,11 @@ export default function Navbar() {
         credentials: "include",
       });
       if (!res.ok) {
-        // 401 => user null
         setLoadingUser(false);
         return;
       }
       const data = await res.json();
-      setUser({ id: data.id, name: data.name, role: data.role });
+      setUser({ id: data.id, name: data.username, role: data.role });
     } catch (error) {
       console.error("Error fetching user info:", error);
     } finally {
@@ -41,7 +40,6 @@ export default function Navbar() {
     }
   }
 
-  // Dipanggil saat logout sukses
   function handleLogoutSuccess() {
     setUser(null);
     router.refresh();
@@ -50,6 +48,7 @@ export default function Navbar() {
   function handleLogoutClick() {
     setShowLogoutModal(true);
   }
+
   function handleCloseModal() {
     setShowLogoutModal(false);
   }
@@ -246,18 +245,52 @@ export default function Navbar() {
   //  4) Login + Role null (fallback)
   // =========================
   return (
-    <nav className="bg-white py-3 shadow">
+    <nav className="bg-gray-200 py-3 shadow-lg">
       <div className="container mx-auto flex justify-between items-center px-4">
-        <h1 className="text-2xl font-extrabold text-blue-600 tracking-wide">
-          Happenings Hub
-        </h1>
-        <button
-          onClick={handleLogoutClick}
-          className="bg-red-500 text-white px-3 py-1 rounded-full 
-                     font-semibold hover:bg-red-600 transition-colors"
-        >
-          Logout
-        </button>
+        <div className="flex items-center space-x-3">
+          <Image
+            src="/logo.svg"
+            alt="Happenings Hub Logo"
+            width={40}
+            height={40}
+            className="object-contain"
+          />
+          <h1 className="text-2xl font-extrabold text-blue-600 tracking-wide">
+            Happenings Hub
+          </h1>
+        </div>
+
+        <div className="hidden md:flex items-center space-x-6">
+          <NavLink href="/eventlisting">Find Events</NavLink>
+          <NavLink href="/categories">Categories</NavLink>
+          <NavLink href="/helpcenter">Help Center</NavLink>
+          {user ? (
+            <>
+              {user.role === "CUSTOMERS" && (
+                <NavLink href="/dashboard/customer">Dashboard</NavLink>
+              )}
+              {user.role === "ORGANIZERS" && (
+                <NavLink href="/dashboard/organizer">Dashboard</NavLink>
+              )}
+              <button
+                onClick={handleLogoutClick}
+                className="bg-red-500 text-white px-3 py-1 rounded-full font-semibold hover:bg-red-600 transition-colors"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <NavLink href="/login">Log In</NavLink>
+              <Link href="/register" className="relative group py-2">
+                <span className="relative z-10 px-4 py-1 text-white font-semibold">
+                  Register
+                </span>
+                <div className="absolute inset-0 rounded-full bg-blue-400 group-hover:bg-blue-600 transition-colors z-0" />
+              </Link>
+            </>
+          )}
+        </div>
       </div>
 
       {showLogoutModal && (
@@ -270,7 +303,6 @@ export default function Navbar() {
   );
 }
 
-
 function NavLink({
   href,
   children,
@@ -281,12 +313,7 @@ function NavLink({
   return (
     <Link
       href={href}
-      className="
-        relative text-gray-600 hover:text-blue-600 transition-colors 
-        after:content-[''] after:absolute after:left-0 after:-bottom-[2px] 
-        after:h-[2px] after:w-0 after:bg-current
-        hover:after:w-full after:transition-all after:duration-300
-      "
+      className="relative text-gray-600 hover:text-blue-600 transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-[2px] after:h-[2px] after:w-0 after:bg-current hover:after:w-full after:transition-all after:duration-300"
     >
       {children}
     </Link>

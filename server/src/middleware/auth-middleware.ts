@@ -9,6 +9,7 @@ export async function verifyToken(
 ) {
   try {
     const token = req.cookies.token;
+    console.log(token);
 
     if (!token) {
       res.status(401).json({ message: "Please login first!" });
@@ -19,9 +20,14 @@ export async function verifyToken(
       token,
       process.env.JWT_SECRET_KEY as string
     ) as CustomJWTPayload;
-    
-    req.user = verifiedUser;
 
+
+    if (!verifiedUser) {
+      res.status(401).json({ message: "Invalid token" });
+      return;
+    }
+
+    req.user = verifiedUser;
 
     next();
   } catch (error) {

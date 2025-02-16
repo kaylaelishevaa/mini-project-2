@@ -46,7 +46,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
       role: existingUser.role,
     };
     const token = jwt.sign(jwtPayload, process.env.JWT_SECRET_KEY as string, {
-      expiresIn: "1h",
+      expiresIn: "24h",
     });
 
     res
@@ -133,7 +133,7 @@ export async function getCurrentUser(
 ) {
   try {
     const userId = req.user?.id;
-    
+
     if (!userId) {
       res.status(401).json({ message: "Unauthorized" });
       return;

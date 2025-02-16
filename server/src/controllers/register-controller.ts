@@ -81,9 +81,9 @@ export async function register(
         await prisma.coupon.create({
           data: {
             userId: newUser.id,
-            discount: 10,
-            expiresAt: new Date(new Date().setMonth(new Date().getMonth() + 3))},
-            // expiresAt: new Date(Date.now() + 3 * 60 * 1000),          },
+            expiresAt: new Date(Date.now() + 3 * 60 * 1000),
+            code: `COUPON${newUser.id}${Date.now().toString().slice(-3)}`,
+          },
         });
       } else {
         res.status(400).json({ message: "Referral code is invalid." });

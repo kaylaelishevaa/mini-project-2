@@ -233,9 +233,11 @@ export default function LoginPage() {
 
       // Arahkan sesuai role
       if (meData.role === "CUSTOMERS") {
-        router.push("/home-customers");
+        // langsung ke /home-customers
+        router.push("/dashboard/home-customers");
       } else if (meData.role === "ORGANIZERS") {
-        router.push("/home-organizers");
+        // langsung ke /home-organizers
+        router.push("/dashboard/home-organizers");
       } else {
         router.push("/select-role");
       }

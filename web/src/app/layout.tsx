@@ -5,48 +5,20 @@ import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import { ReactNode } from "react";
 
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
 
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
-// export const metadata: Metadata = {
-//   title: "Happenings Hub",
-//   description: "best event website in the world",
-// };
-
-// export default function RootLayout({
-//   children,
-// }: Readonly<{
-//   children: React.ReactNode;
-// }>) {
-//   return (
-//     <html lang="en">
-//       <body
-//         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-//       >
-//         {children}
-//       </body>
-//     </html>
-//   );
-// }
-
-
-// // KODE DIBAWAH INI BIKINAN KYLA
-
-// // // app/layout.tsx
-// // import './globals.css'
-// // import { ReactNode } from 'react'
-
-// // export const metadata = {
-// //   title: 'My Event Management App',
-// //   description: 'Next.js + Express + Prisma + Tailwind (Responsive)',
-// // }
+export const metadata: Metadata = {
+  title: "Happenings Hub",
+  description: "best event website in the world",
+};
 
 const lexend = Lexend({ subsets: ["latin"], weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"] });
 

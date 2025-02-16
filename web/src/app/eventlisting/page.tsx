@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-// Define the AllEvent interface here
 interface AllEvent {
   id: number;
   name: string;
@@ -15,12 +14,58 @@ interface AllEvent {
   description: string;
   availableSeats: number;
   slug: string;
+  excerpt: string;
   categories: string[];
 }
 
 const EVENTS_PER_PAGE = 6;
 
-export default function EventListing() {
+interface EventCardProps {
+  event: AllEvent;
+}
+
+const EventCard: React.FC<EventCardProps> = ({ event }) => (
+  <div className="bg-white p-4 rounded shadow mb-4">
+    <div className="relative h-48 overflow-hidden rounded-t">
+      <Image
+        src={event.image}
+        alt={event.name}
+        fill
+        className="absolute inset-0 w-full h-full object-cover object-center"
+      />
+    </div>
+    <div className="p-4">
+      <h2 className="text-xl font-bold mb-2">{event.name}</h2>
+      <p className="text-gray-600 mb-2">{event.excerpt}</p>
+      <div className="flex flex-wrap gap-2 mb-4">
+        {event.categories.map((category, index) => (
+          <span
+            key={index}
+            className="bg-red-900 text-white rounded-full px-3 py-1 text-sm"
+          >
+            {category}
+          </span>
+        ))}
+      </div>
+      <div className="flex space-x-2">
+        <Link
+          href={`/payment/${event.id}`}
+          className="bg-red-900 text-white px-4 py-2 rounded hover:bg-black transition-colors duration-300"
+        >
+          Buy Tickets
+        </Link>
+        <Link
+          href={`/eventlisting/${event.id}`}
+          className="bg-red-900 text-white px-4 py-2 rounded hover:bg-black transition-colors duration-300"
+        >
+          Detail Event
+        </Link>
+      </div>
+    </div>
+  </div>
+);
+
+const EventListing: React.FC = () => {
   const [events, setEvents] = useState<AllEvent[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<AllEvent[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -40,11 +85,11 @@ export default function EventListing() {
 
         // Extract unique categories and locations
         const uniqueCategories = [
-          ...new Set(data.data.flatMap((event) => event.categories)),
-        ];
+          ...new Set(data.data.flatMap((event: AllEvent) => event.categories)),
+        ] as string[];
         const uniqueLocations = [
-          ...new Set(data.data.map((event) => event.location)),
-        ];
+          ...new Set(data.data.map((event: AllEvent) => event.location)),
+        ] as string[];
         setCategories(uniqueCategories);
         setLocations(uniqueLocations);
       } catch (error) {
@@ -84,22 +129,23 @@ export default function EventListing() {
     filterEvents();
   }, [searchTerm, selectedCategory, selectedLocation, events]);
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  };
-
   const debouncedSearch = (
-    func: (searchTerm: string) => void,
+    func: (event: React.ChangeEvent<HTMLInputElement>) => void,
     delay: number
   ) => {
-    let timeout: NodeJS.Timeout;
-    return (searchTerm: string) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => func(searchTerm), delay);
+    let timeout: NodeJS.Timeout | null = null;
+    return (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+      timeout = setTimeout(() => func(event), delay);
     };
   };
 
-  const handleDebouncedSearch = debouncedSearch(handleSearchChange, 300);
+  const handleDebouncedSearch = debouncedSearch(
+    (event) => setSearchTerm(event.target.value),
+    300
+  );
 
   const handleCategoryChange = (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -127,12 +173,35 @@ export default function EventListing() {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <div>
+    <div className="container mx-auto p-4 max-w-7xl">
+      <section className="relative flex flex-col items-center justify-center h-56 bg-cover bg-center">
+        <div className="absolute inset-0 h-56">
+          <Image
+            src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="Landing Page Photo"
+            fill
+            className="object-cover"
+          />
+        </div>
 
-      </div>
+        <div className="absolute inset-0 bg-black opacity-50"></div>
+        <div className="container relative z-10 flex flex-col items-center mx-auto space-y-8 text-white text-center lg:flex-row lg:space-y-0 lg:space-x-12 justify-center">
+          <div className="w-full lg:w-1/2 flex flex-col items-center justify-center text-center">
+            <h1 className="text-5xl sm:text-6xl md:text-6xl lg:text-6xl xl:text-6xl font-bold tracking-wide leading-tight">
+              LIST OF EVENTS
+            </h1>
+
+            <div className="mt-6 space-y-4">
+              <p className="text-base sm:text-lg md:text-xl">
+                Buying event tickets is an exhilarating experience that brings a
+                sense of anticipation and excitement.
+              </p>
+            </div>
+            <div className="flex flex-col gap-4 mt-6 sm:flex-row justify-center"></div>
+          </div>
+        </div>
+      </section>
       <div className="mt-8">
-        <h1 className="text-4xl font-bold mb-4 text-center">Upcoming Events</h1>
         <div className="mb-4">
           <input
             type="text"
@@ -170,59 +239,7 @@ export default function EventListing() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {currentEvents.map((event) => (
-            <div key={event.id} className="bg-white p-4 rounded shadow">
-              <div className="relative h-48 overflow-hidden rounded-t">
-                <Image
-                  src={event.image}
-                  alt={event.name}
-                  fill
-                  className="absolute inset-0 w-full h-full object-cover object-center"
-                />
-              </div>
-              <div className="p-4">
-                <h2 className="text-xl font-bold mb-2">{event.name}</h2>
-                <p className="text-gray-600 mb-2">
-                  <strong>Price:</strong> ${event.price}
-                </p>
-                <p className="text-gray-600 mb-2">
-                  <strong>Date:</strong>{" "}
-                  {new Date(event.date).toLocaleDateString()}
-                </p>
-                <p className="text-gray-600 mb-2">
-                  <strong>Location:</strong> {event.location}
-                </p>
-                <p className="text-gray-600 mb-2">
-                  <strong>Description:</strong> {event.description}
-                </p>
-                <p className="text-gray-600 mb-2">
-                  <strong>Available Seats:</strong> {event.availableSeats}
-                </p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {event.categories.map((category, index) => (
-                    <span
-                      key={index}
-                      className="bg-red-900 text-white rounded-full px-3 py-1 text-sm"
-                    >
-                      {category}
-                    </span>
-                  ))}
-                </div>
-                <div className="flex space-x-2">
-                  <Link
-                    href={`/payment/${event.id}`}
-                    className="bg-red-900 text-white px-4 py-2 rounded hover:bg-black transition-colors duration-300"
-                  >
-                    Buy Tickets
-                  </Link>
-                  <Link
-                    href={`/eventlisting/${event.id}`}
-                    className="bg-red-900 text-white px-4 py-2 rounded hover:bg-black transition-colors duration-300"
-                  >
-                    Detail Event
-                  </Link>
-                </div>
-              </div>
-            </div>
+            <EventCard key={event.id} event={event} />
           ))}
         </div>
         <div className="mt-4 flex justify-center">
@@ -243,4 +260,6 @@ export default function EventListing() {
       </div>
     </div>
   );
-}
+};
+
+export default EventListing;
