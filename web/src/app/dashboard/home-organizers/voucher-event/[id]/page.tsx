@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 
-export default function Home() {
+function App() {
   const [formData, setFormData] = useState({
     eventId: "",
     name: "",
@@ -11,6 +11,9 @@ export default function Home() {
     referralCode: "",
     validUntil: "",
   });
+
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,6 +25,9 @@ export default function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccessMessage("");
+
     try {
       const response = await fetch("http://localhost:8000/api/v1/promotions", {
         method: "POST",
@@ -29,137 +35,148 @@ export default function Home() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
+        credentials: "include",
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        alert("Promotion created successfully!");
-        setFormData({
-          eventId: "",
-          name: "",
-          discountValue: "",
-          limit: "",
-          referralCode: "",
-          validUntil: "",
-        });
+        setSuccessMessage(data.message);
       } else {
-        alert("Failed to create promotion.");
+        setError(data.message);
       }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("An error occurred while creating the promotion.");
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again later.");
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg"
-      >
-        <h2 className="text-2xl font-bold mb-6">Create Voucher</h2>
-        <div className="mb-4">
-          <label
-            htmlFor="eventId"
-            className="block text-gray-700 font-bold mb-2"
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h1 className="text-2xl font-bold mb-6 text-center">Create Voucher</h1>
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+            {error}
+          </div>
+        )}
+        {successMessage && (
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+            {successMessage}
+          </div>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="eventId"
+            >
+              Event ID:
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="text"
+              id="eventId"
+              name="eventId"
+              value={formData.eventId}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="name"
+            >
+              Name:
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="discountValue"
+            >
+              Discount Value:
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="number"
+              id="discountValue"
+              name="discountValue"
+              value={formData.discountValue}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="limit"
+            >
+              Limit:
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="number"
+              id="limit"
+              name="limit"
+              value={formData.limit}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="referralCode"
+            >
+              Referral Code:
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="text"
+              id="referralCode"
+              name="referralCode"
+              value={formData.referralCode}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="validUntil"
+            >
+              Valid Until:
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="datetime-local"
+              id="validUntil"
+              name="validUntil"
+              value={formData.validUntil}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="submit"
           >
-            Event ID
-          </label>
-          <input
-            type="text"
-            id="eventId"
-            name="eventId"
-            value={formData.eventId}
-            onChange={handleChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="name" className="block text-gray-700 font-bold mb-2">
-            Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="discountValue"
-            className="block text-gray-700 font-bold mb-2"
-          >
-            Discount Value
-          </label>
-          <input
-            type="number"
-            id="discountValue"
-            name="discountValue"
-            value={formData.discountValue}
-            onChange={handleChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="limit" className="block text-gray-700 font-bold mb-2">
-            Limit
-          </label>
-          <input
-            type="number"
-            id="limit"
-            name="limit"
-            value={formData.limit}
-            onChange={handleChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="referralCode"
-            className="block text-gray-700 font-bold mb-2"
-          >
-            Referral Code
-          </label>
-          <input
-            type="text"
-            id="referralCode"
-            name="referralCode"
-            value={formData.referralCode}
-            onChange={handleChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            required
-          />
-        </div>
-        <div className="mb-6">
-          <label
-            htmlFor="validUntil"
-            className="block text-gray-700 font-bold mb-2"
-          >
-            Valid Until
-          </label>
-          <input
-            type="datetime-local"
-            id="validUntil"
-            name="validUntil"
-            value={formData.validUntil}
-            onChange={handleChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          Submit
-        </button>
-      </form>
+            Create Voucher
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
+
+export default App;

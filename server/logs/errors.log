@@ -397,3 +397,32 @@ Invalid `prisma.event.findUnique()` invocation in
           })
 
 Argument `id` is missing.
+2025-02-16T03:22:45.185Z - Missing required fields: eventId
+2025-02-16T03:30:22.742Z - Missing required fields: eventId
+2025-02-16T03:31:16.642Z - Missing required fields: eventId
+2025-02-16T03:33:58.386Z - Missing required fields: eventId
+2025-02-16T03:34:18.897Z - Missing required fields: eventId
+2025-02-16T03:36:05.567Z - Missing required fields: eventId
+2025-02-16T04:02:46.068Z - Unexpected error in GetSingleEvent: 
+Invalid `prisma.event.findUnique()` invocation in
+/home/farrelihsanp/PURWADHIKA/MINI-PROJECT-MASTER/server/src/controllers/event-controller.ts:176:38
+
+  173   next: NextFunction
+  174 ) {
+  175   try {
+→ 176     const event = await prisma.event.findUnique({
+            where: {
+          +   id: Int
+            },
+            include: {
+              organizer: true,
+              CategoryEvent: {
+                include: {
+                  Category: true
+                }
+              }
+            }
+          })
+
+Argument `id` is missing.
+2025-02-16T06:08:43.524Z - Event with ID 127 not found

@@ -46,7 +46,7 @@ const EventSortedByCategory = ({ params }) => {
   }
 
   return (
-    <section>
+    <section className="m-20">
       <div>
         <h1 className="text-3xl font-bold mb-6 text-center">SORTED EVENTS</h1>
         <p className="text-gray-600 text-center mb-11">

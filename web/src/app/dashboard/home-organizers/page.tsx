@@ -140,7 +140,7 @@ export default function DashboardPage() {
               Total Revenue
             </h2>
             <p className="text-2xl font-bold">
-              ${Number(totalRevenue).toLocaleString()}
+              Rp. {Number(totalRevenue).toLocaleString()}
             </p>
           </div>
         </div>
@@ -173,7 +173,7 @@ export default function DashboardPage() {
                       <td className="py-2 px-3">{registrationCount}</td>
                       <td className="py-2 px-3">{evt.Transaction.length}</td>
                       <td className="py-2 px-3">
-                        ${totalAmount.toLocaleString()}
+                        Rp. {totalAmount.toLocaleString()}
                       </td>
                     </tr>
                   );

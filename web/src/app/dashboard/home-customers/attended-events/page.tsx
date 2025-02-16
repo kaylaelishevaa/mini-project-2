@@ -27,12 +27,12 @@ export default function AttendedEventsPage() {
   console.log(events);
 
   return (
-    <section className="container mx-auto px-4 py-8">
-      <div>
+    <section className="container mx-auto px-4 py-8 ">
+      <div className="bg-red-900 p-10 text-white">
         <h1 className="text-3xl font-bold mb-6 text-center">
           Events that you have attended!
         </h1>
-        <p className="text-gray-600 text-center">
+        <p className="text-white text-center ">
           When individuals attend an event, they contribute to a vibrant
           atmosphere filled with energy and enthusiasm. Each participant brings
           their unique perspective, enriching discussions and interactions. For

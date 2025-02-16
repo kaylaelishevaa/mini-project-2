@@ -77,7 +77,7 @@ export default function BlogPage() {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto max-w-7xl p-4">
       <h1 className="text-red-900 text-4xl font-bold mb-4 text-center">
         See Best Event in the World
       </h1>
@@ -122,13 +122,13 @@ export default function BlogPage() {
           <>
             <button
               onClick={prevSlide}
-              className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white text-blue-500 font-semibold py-3 px-6 rounded-full hover:bg-blue-100 transition duration-300"
+              className="absolute top-1/2 left-4 transform -translate-y-10 bg-red-900 text-white font-semibold w-10 h-10 rounded-full flex items-center justify-center hover:bg-blue-100 transition duration-300"
             >
               &lt;
             </button>
             <button
               onClick={nextSlide}
-              className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white text-blue-500 font-semibold py-3 px-6 rounded-full hover:bg-blue-100 transition duration-300"
+              className="absolute top-1/2 right-4 transform -translate-y-10 bg-red-900 text-white font-semibold w-10 h-10 rounded-full flex items-center justify-center hover:bg-blue-100 transition duration-300"
             >
               &gt;
             </button>

@@ -14,13 +14,14 @@ interface AllEvent {
   description: string;
   availableSeats: number;
   slug: string;
+  excerpt: string;
   categories: string[];
 }
 
 const EVENTS_PER_PAGE = 6;
 
 const EventCard = ({ event }: { event: AllEvent }) => (
-  <div className="bg-white p-4 rounded shadow">
+  <div className="bg-white p-4 rounded shadow mb-4">
     <div className="relative h-48 overflow-hidden rounded-t">
       <Image
         src={event.image}
@@ -31,21 +32,7 @@ const EventCard = ({ event }: { event: AllEvent }) => (
     </div>
     <div className="p-4">
       <h2 className="text-xl font-bold mb-2">{event.name}</h2>
-      <p className="text-gray-600 mb-2">
-        <strong>Price:</strong> Rp.{event.price}
-      </p>
-      <p className="text-gray-600 mb-2">
-        <strong>Date:</strong> {new Date(event.date).toLocaleDateString()}
-      </p>
-      <p className="text-gray-600 mb-2">
-        <strong>Location:</strong> {event.location}
-      </p>
-      <p className="text-gray-600 mb-2">
-        <strong>Description:</strong> {event.description}
-      </p>
-      <p className="text-gray-600 mb-2">
-        <strong>Available Seats:</strong> {event.availableSeats}
-      </p>
+      <p className="text-gray-600 mb-2">{event.excerpt}</p>
       <div className="flex flex-wrap gap-2 mb-4">
         {event.categories.map((category, index) => (
           <span
@@ -89,6 +76,7 @@ export default function EventListing() {
       try {
         const response = await fetch("http://localhost:8000/api/v1/events");
         const data = await response.json();
+        console.log(data.data); // Debugging: Check if data is fetched correctly
         setEvents(data.data);
         setFilteredEvents(data.data);
 
@@ -131,6 +119,7 @@ export default function EventListing() {
         );
       }
 
+      console.log(filtered); // Debugging: Check if events are filtered correctly
       setFilteredEvents(filtered);
       setCurrentPage(1); // Reset to first page when filters change
     };
@@ -175,12 +164,14 @@ export default function EventListing() {
   );
   const totalPages = Math.ceil(filteredEvents.length / EVENTS_PER_PAGE);
 
+  console.log(currentEvents); // Debugging: Check if current events are correct
+
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 max-w-7xl">
       <div className="mt-8">
         <h1 className="text-4xl font-bold mb-4 text-center">Upcoming Events</h1>
         <div className="mb-4">

@@ -103,26 +103,10 @@ const EventDetail = ({ params }) => {
           </div>
           <div className="flex items-center gap-4 mt-4 sm:mt-0">
             <Link href={`/payment/${event.id}`} className="text-gray-600">
-              <button className="bg-yellow-400 px-6 py-2 text-sm font-bold rounded-lg hover:scale-105 transition">
+              <button className="bg-red-900 text-white px-6 py-2 text-sm font-bold rounded-lg hover:scale-105 transition">
                 Buy Tickets
               </button>
             </Link>
-            <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M17.25 8.25L12 13.5l-5.25-5.25"
-                />
-              </svg>
-            </button>
           </div>
         </div>
 
@@ -204,10 +188,10 @@ const EventDetail = ({ params }) => {
           </div>
 
           {/* Right Column */}
-          <div className="space-y-6">
+          <div className="space-y-6 text-right">
             {/* Ticket Information */}
             <div>
-              <h3 className="font-bold text-lg mb-2">Ticket Information</h3>
+              <h3 className="font-bold text-lg mb-2 ">Ticket Information</h3>
               <p>Ticket: Rp. {event.price}</p>
             </div>
           </div>

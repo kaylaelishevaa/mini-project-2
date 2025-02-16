@@ -44,7 +44,7 @@ async function main() {
         email: "edward@example.com",
         role: "CUSTOMERS",
         referralNumber: "REF102",
-        walletBalance: 120,
+        walletBalance: 600000,
         emailConfirmed: true,
       },
       {
@@ -54,7 +54,7 @@ async function main() {
         email: "fiona@example.com",
         role: "ORGANIZERS",
         referralNumber: "REF103",
-        walletBalance: 500000,
+        walletBalance: 700000,
         emailConfirmed: true,
       },
       {
@@ -64,7 +64,7 @@ async function main() {
         email: "george@example.com",
         role: "CUSTOMERS",
         referralNumber: "REF104",
-        walletBalance: 500000,
+        walletBalance: 800000,
         emailConfirmed: true,
       },
       {
@@ -74,7 +74,7 @@ async function main() {
         email: "hannah@example.com",
         role: "ORGANIZERS",
         referralNumber: "REF105",
-        walletBalance: 500000,
+        walletBalance: 900000,
         emailConfirmed: true,
       },
       {
@@ -94,7 +94,7 @@ async function main() {
         email: "jasmine@example.com",
         role: "ORGANIZERS",
         referralNumber: "REF107",
-        walletBalance: 500000,
+        walletBalance: 600000,
         emailConfirmed: true,
       },
       {
@@ -104,7 +104,7 @@ async function main() {
         email: "kevin@example.com",
         role: "CUSTOMERS",
         referralNumber: "REF108",
-        walletBalance: 500000,
+        walletBalance: 700000,
         emailConfirmed: true,
       },
       {
@@ -114,7 +114,7 @@ async function main() {
         email: "lily@example.com",
         role: "ORGANIZERS",
         referralNumber: "REF109",
-        walletBalance: 500000,
+        walletBalance: 800000,
         emailConfirmed: true,
       },
       {
@@ -124,7 +124,7 @@ async function main() {
         email: "michael@example.com",
         role: "CUSTOMERS",
         referralNumber: "REF110",
-        walletBalance: 500000,
+        walletBalance: 900000,
         emailConfirmed: true,
       },
     ],
@@ -266,7 +266,8 @@ async function main() {
       {
         name: "Rock Concert",
         excerpt: "A night of rock music",
-        description: "Join us for a night of rock music",
+        description:
+          "As the sun began to set, casting a warm golden hue over the city, the anticipation for the rock concert grew palpable. Fans clad in band t-shirts and denim jackets gathered outside the venue, their voices blending into a chorus of excitement. The air was thick with the scent of popcorn and the sound of distant guitar riffs, hinting at the electrifying night ahead.",
         date: new Date("2023-10-15T20:00:00Z"),
         price: 50000,
         image:
@@ -279,8 +280,9 @@ async function main() {
       },
       {
         name: "Football Match",
-        excerpt: "A thrilling football match",
-        description: "Watch your favorite team play",
+        excerpt: "Watch your favorite team play",
+        description:
+          "The sun hung low in the sky, casting a golden hue over the stadium as fans filled the stands, their cheers echoing like thunder. It was a day that promised excitement, as two rival teams prepared to clash on the pitch. The air was thick with anticipation, and the smell of popcorn and hot dogs wafted through the crowd, mingling with the sound of drums and chants.",
         date: new Date("2023-11-20T15:00:00Z"),
         price: 60000,
         image:
@@ -294,7 +296,8 @@ async function main() {
       {
         name: "Tech Conference",
         excerpt: "Learn about the latest tech trends",
-        description: "Join experts in the tech industry",
+        description:
+          "In the heart of a bustling city, the annual Tech Conference unfolds, drawing thousands of participants from around the globe. This event, a melting pot of ideas and innovations, showcases the latest advancements in technology, from artificial intelligence and blockchain to virtual reality and sustainable tech solutions.",
         date: new Date("2023-12-10T09:00:00Z"),
         price: 70000,
         image:
@@ -308,7 +311,8 @@ async function main() {
       {
         name: "Food Festival",
         excerpt: "A food festival",
-        description: "Explore the world of food and culture",
+        description:
+          "As attendees wandered through the festival, they were greeted by an array of tantalizing dishes. From spicy street tacos to delicate sushi rolls, the options were endless. Local chefs and home cooks showcased their signature recipes, each dish telling a story of heritage and passion. The festival also featured cooking demonstrations, where renowned chefs shared their culinary secrets, inspiring aspiring cooks to try their hand at new techniques.",
         date: new Date("2024-01-15T20:00:00Z"),
         price: 80000,
         image:
@@ -322,7 +326,8 @@ async function main() {
       {
         name: "Art Exhibition",
         excerpt: "An art exhibition",
-        description: "Discover the world of art",
+        description:
+          "Upon entering the gallery, guests are greeted by a vibrant array of colors and textures that dance across the walls. Each piece tells a story, inviting viewers to step into the artist's world. The exhibition features a diverse collection of works, ranging from contemporary paintings and sculptures to traditional crafts and digital installations. The atmosphere is electric, filled with the whispers of art enthusiasts discussing their interpretations and the emotions evoked by each piece.",
         date: new Date("2024-02-20T15:00:00Z"),
         price: 90000,
         image:
@@ -336,7 +341,8 @@ async function main() {
       {
         name: "Movie Night",
         excerpt: "A movie night",
-        description: "Watch your favorite movies",
+        description:
+          "The room was dimly lit, with soft fairy lights strung around the walls, adding a touch of whimsy to the ambiance. A large screen was set up, ready to showcase the evening's feature film. Comfy blankets and plush cushions were scattered across the floor, inviting everyone to settle in for a night of entertainment.",
         date: new Date("2024-03-10T09:00:00Z"),
         price: 100000,
         image:
@@ -350,7 +356,8 @@ async function main() {
       {
         name: "Travel Adventure",
         excerpt: "A travel adventure",
-        description: "Explore new destinations",
+        description:
+          "Traveling is more than just a change of scenery; it is an adventure that opens the door to new experiences, cultures, and perspectives. Imagine standing at the edge of a bustling market in Marrakech, where the air is filled with the scent of spices and the sounds of merchants calling out to passersby. The vibrant colors of the textiles and the intricate designs of the pottery create a feast for the eyes, inviting you to explore further.",
         date: new Date("2024-04-15T20:00:00Z"),
         price: 110000,
         image:
@@ -364,7 +371,8 @@ async function main() {
       {
         name: "Health Workshop",
         excerpt: "A health workshop",
-        description: "Learn about health and wellness",
+        description:
+          "In today's fast-paced world, maintaining our health often takes a backseat to our busy schedules. Recognizing this challenge, we organized a comprehensive health workshop aimed at empowering individuals with the knowledge and tools necessary to lead healthier lives. This workshop was designed to cater to a diverse audience, from health enthusiasts to those just beginning their wellness journey.",
         date: new Date("2024-05-20T15:00:00Z"),
         price: 120000,
         image:
@@ -378,7 +386,8 @@ async function main() {
       {
         name: "Education Conference",
         excerpt: "An education conference",
-        description: "Learn from experts in education",
+        description:
+          "The Education Conference is an annual gathering that brings together educators, policymakers, researchers, and innovators from around the globe to discuss the latest trends, challenges, and advancements in the field of education. This year, the conference is set to take place in a vibrant city, known for its rich cultural heritage and commitment to educational excellence.",
         date: new Date("2024-06-10T09:00:00Z"),
         price: 130000,
         image:
@@ -392,7 +401,8 @@ async function main() {
       {
         name: "Community Gathering",
         excerpt: "A community gathering",
-        description: "Join us for a community event",
+        description:
+          "The gathering featured a plethora of activities designed to engage people of all ages. Children laughed and played in the designated play area, where face painting and games brought smiles to their faces. Meanwhile, adults participated in workshops that ranged from gardening tips to financial literacy, fostering a spirit of learning and growth.",
         date: new Date("2024-07-15T20:00:00Z"),
         price: 140000,
         image:
@@ -470,52 +480,52 @@ async function main() {
     data: [
       {
         userId: user1.id,
-        pointsEarned: 50,
+        pointsEarned: 50000,
         expiresAt: new Date("2024-01-01T00:00:00Z"),
       },
       {
         userId: user2.id,
-        pointsEarned: 75,
+        pointsEarned: 50000,
         expiresAt: new Date("2024-01-01T00:00:00Z"),
       },
       {
         userId: user3.id,
-        pointsEarned: 100,
+        pointsEarned: 50000,
         expiresAt: new Date("2024-01-01T00:00:00Z"),
       },
       {
         userId: user4.id,
-        pointsEarned: 125,
+        pointsEarned: 50000,
         expiresAt: new Date("2024-01-01T00:00:00Z"),
       },
       {
         userId: user5.id,
-        pointsEarned: 150,
+        pointsEarned: 50000,
         expiresAt: new Date("2024-01-01T00:00:00Z"),
       },
       {
         userId: user6.id,
-        pointsEarned: 175,
+        pointsEarned: 50000,
         expiresAt: new Date("2024-01-01T00:00:00Z"),
       },
       {
         userId: user7.id,
-        pointsEarned: 200,
+        pointsEarned: 50000,
         expiresAt: new Date("2024-01-01T00:00:00Z"),
       },
       {
         userId: user8.id,
-        pointsEarned: 225,
+        pointsEarned: 50000,
         expiresAt: new Date("2024-01-01T00:00:00Z"),
       },
       {
         userId: user9.id,
-        pointsEarned: 250,
+        pointsEarned: 50000,
         expiresAt: new Date("2024-01-01T00:00:00Z"),
       },
       {
         userId: user10.id,
-        pointsEarned: 275,
+        pointsEarned: 50000,
         expiresAt: new Date("2024-01-01T00:00:00Z"),
       },
     ],
