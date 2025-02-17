@@ -9,7 +9,7 @@ import { EventData } from "../types/express";
 const prisma = new PrismaClient();
 const app = express();
 app.use(express.json());
-``;
+
 function generateSlug(name: string): string {
   return name
     .toLowerCase()

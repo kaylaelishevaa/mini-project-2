@@ -13,7 +13,7 @@ const EventPage = () => {
     date: "",
     price: "",
     availableSeats: "",
-    categoryId: "", // Changed to single category ID
+    categoryId: "",
     isFree: false,
     organizerId: "",
   });
@@ -252,7 +252,7 @@ const EventPage = () => {
         </div>
         <button
           type="submit"
-          className="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:bg-indigo-700"
+          className="w-full bg-red-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:bg-indigo-700"
         >
           Create Event
         </button>
