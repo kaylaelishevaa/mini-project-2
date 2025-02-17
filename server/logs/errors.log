@@ -453,3 +453,13 @@ Invalid `prisma.event.create()` invocation in
   96 
 → 97 await prisma.event.create(
 Foreign key constraint violated: `Event_organizerId_fkey (index)`
+2025-02-16T22:56:16.928Z - Event with ID 13 not found
+2025-02-16T23:54:11.190Z - Event with ID 1 not found
+2025-02-17T00:02:37.912Z - Event with ID 1 not found
+2025-02-17T00:18:53.545Z - Event with ID 1 not found
+2025-02-17T00:18:56.858Z - Event with ID 9 not found
+2025-02-17T00:22:56.051Z - Event with ID 7 not found
+2025-02-17T00:36:02.420Z - Event with ID 7 not found
+2025-02-17T00:36:46.333Z - Event with ID 7 not found
+2025-02-17T01:30:03.590Z - Event with ID 8 not found
+2025-02-17T01:33:23.227Z - Event with ID 8 not found

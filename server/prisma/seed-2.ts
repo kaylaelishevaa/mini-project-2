@@ -15,8 +15,6 @@ async function main() {
   await prisma.category.deleteMany();
   await prisma.event.deleteMany();
   await prisma.confirmToken.deleteMany();
-  await prisma.coupon.deleteMany();
-  await prisma.point.deleteMany();
   await prisma.referral.deleteMany();
   await prisma.wallet.deleteMany();
   await prisma.user.deleteMany();
@@ -46,7 +44,7 @@ async function main() {
       username: "janesmith",
       password: hashedPassword2,
       email: "janesmith@example.com",
-      emailConfirmed: false,
+      emailConfirmed: true,
       role: "ORGANIZERS",
       referralNumber: "REF67890",
     },
@@ -57,26 +55,6 @@ async function main() {
     data: {
       referredById: user1.id,
       referredUserId: user2.id,
-    },
-  });
-
-  // Seed Points
-  await prisma.point.create({
-    data: {
-      userId: user1.id,
-      pointsEarned: 100,
-      expiresAt: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
-    },
-  });
-
-  // Seed Coupons
-  await prisma.coupon.create({
-    data: {
-      code: "DISCOUNT10",
-      discount: 10,
-      used: false,
-      userId: user1.id,
-      expiresAt: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
     },
   });
 

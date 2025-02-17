@@ -7,7 +7,7 @@ const router = express.Router()
 router.route("/redeem-points").post(roleGuard("CUSTOMERS"), redeemPoints)
 router.route("/checkout").post(roleGuard("CUSTOMERS"), checkoutTicket)
 router.route("/points").get(verifyToken, roleGuard("CUSTOMERS"), getPoints)
-router.route("/active-coupon").get(verifyToken, roleGuard("CUSTOMERS"), getActiveCoupon)
+router.route("/active-coupon").get(verifyToken, getActiveCoupon)
 
 
 export default router; 

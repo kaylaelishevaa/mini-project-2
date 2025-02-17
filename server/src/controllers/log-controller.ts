@@ -136,7 +136,7 @@ export async function getCurrentUser(
 
     if (!userId) {
       res.status(401).json({ message: "Unauthorized" });
-      return;
+      return
     }
 
     const user = await prisma.user.findUnique({
@@ -145,10 +145,23 @@ export async function getCurrentUser(
 
     if (!user) {
       res.status(404).json({ message: "User not found." });
-      return;
+      return
     }
 
-    // Return minimal user data
+    // 1) Dapatkan semua point user yang belum expired
+    const validPoints = await prisma.point.findMany({
+      where: {
+        userId: userId,
+        expiresAt: {
+          gte: new Date(), // hanya point yang belum kedaluwarsa
+        },
+      },
+    });
+
+    // 2) Hitung total point
+    const totalPoints = validPoints.reduce((acc, p) => acc + p.pointsEarned, 0);
+
+    // 3) Return data user + totalPoints
     res.status(200).json({
       id: user.id,
       username: user.username,
@@ -158,6 +171,7 @@ export async function getCurrentUser(
       wallet: user.walletBalance,
       emailConfirmed: user.emailConfirmed,
       createdAt: user.createdAt,
+      points: totalPoints, // tambahkan di respons
     });
   } catch (error) {
     next(error);
