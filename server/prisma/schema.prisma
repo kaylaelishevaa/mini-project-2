@@ -62,7 +62,7 @@ model Point {
 
 model Coupon {
   id        Int      @id @default(autoincrement())
-  code      String   @unique
+  code      String?   @unique
   discount  Int      @default(10)
   used      Boolean  @default(false)
   userId    Int
@@ -131,7 +131,7 @@ model CategoryEvent {
 
 model Voucher {
   id           Int      @id @default(autoincrement())
-  code         String   @unique
+  code         String?   @unique
   discountRate Int
   stock        Int
   eventId      Int

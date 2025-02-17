@@ -1,10 +1,16 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 
-export default function PaymentPage({ params }) {
+interface PaymentPageProps {
+  params: {
+    id: number;
+  };
+}
+
+export default function PaymentPage({ params }: PaymentPageProps) {
   const router = useRouter();
 
   // Event detail
@@ -33,10 +39,6 @@ export default function PaymentPage({ params }) {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    // if (!params.eventId) {
-    //   setMessage("No event ID found in URL.");
-    //   return;
-    // }
     fetchEventDetail();
     fetchUserWallet();
     fetchUserPoints();
@@ -132,9 +134,11 @@ export default function PaymentPage({ params }) {
       setMessage(data.message);
       setWalletBalance(data.newWalletBalance);
       setTopupAmount(0);
-    } catch (error: any) {
-      setMessage(error.message);
-      toast.error("Error!", { autoClose: 3000 });
+    } catch (error) {
+      if (error instanceof Error) {
+        setMessage(error.message);
+        toast.error("Error!", { autoClose: 3000 });
+      }
     } finally {
       setLoading(false);
     }
@@ -169,41 +173,54 @@ export default function PaymentPage({ params }) {
 
       toast.success("Payment successful!", { autoClose: 1500 });
       setTimeout(() => {
-        router.push("/paymentsuccessful?success=true");
+        router.push("/");
       }, 1500);
-    } catch (error: any) {
-      toast.error(error.message, { autoClose: 3000 });
-      setMessage(error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message, { autoClose: 3000 });
+        setMessage(error.message);
+      }
     } finally {
       setLoading(false);
     }
   }
 
+  // Hitung diskon coupon
+  function getCouponDiscountAmount(base: number) {
+    if (useCoupon && hasCoupon) {
+      // Diskon 10% (bisa kamu ubah logikanya)
+      return Math.floor(base * 0.1);
+    }
+    return 0;
+  }
+
+  // Hitung total final
   function getDiscountedPrice() {
-    // base price
     const base = isFree ? 0 : eventPrice * ticketQty;
 
-    let priceAfterCoupon = base;
-    if (useCoupon && hasCoupon) {
-      // misal coupon disc = 10%
-      const disc = Math.floor(priceAfterCoupon * 0.1);
-      priceAfterCoupon = Math.max(priceAfterCoupon - disc, 0);
-    }
+    // 1) coupon
+    const couponDiscount = getCouponDiscountAmount(base);
+    const priceAfterCoupon = Math.max(base - couponDiscount, 0);
 
+    // 2) redeem points
     let finalPrice = priceAfterCoupon;
     if (redeem && points > 0) {
       if (points >= finalPrice) {
         finalPrice = 0;
       } else {
-        finalPrice = finalPrice - points;
+        finalPrice -= points;
       }
     }
-
     return finalPrice;
   }
 
+  // Kebutuhan menampilkan diskon
+  const computedPrice = isFree ? 0 : eventPrice * ticketQty;
+  const couponDiscount = getCouponDiscountAmount(computedPrice);
+  const finalPriceEstimate = getDiscountedPrice();
   const canRedeemPoints = points > 0;
 
+  // Helper formatting
   function formatIDR(num: number) {
     return "IDR " + num.toLocaleString("id-ID");
   }
@@ -212,10 +229,6 @@ export default function PaymentPage({ params }) {
     const d = new Date(iso);
     return d.toLocaleDateString("id-ID");
   }
-
-  const computedPrice = isFree ? 0 : eventPrice * ticketQty;
-
-  const finalPriceEstimate = getDiscountedPrice();
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
@@ -227,7 +240,7 @@ export default function PaymentPage({ params }) {
 
         {message && <p className="text-red-600 mb-2">{message}</p>}
 
-        {/* Set ticket Quantity */}
+        {/* Ticket Quantity */}
         <div className="mb-4">
           <label className="block font-medium">Ticket Quantity</label>
           <input
@@ -239,7 +252,12 @@ export default function PaymentPage({ params }) {
           />
         </div>
 
-        {/* Display total price */}
+        <div className="mb-4">
+          <h2 className="font-semibold">Event Price</h2>
+          <p>{isFree ? "FREE" : formatIDR(eventPrice)}</p>
+        </div>
+
+        {/* Display total price (Tanpa discount/points) */}
         <div className="mb-4">
           <h2 className="font-semibold">Calculated Price</h2>
           <p className="text-xl text-green-700 font-bold">
@@ -248,26 +266,8 @@ export default function PaymentPage({ params }) {
           <p className="text-sm text-gray-500">(Estimated total)</p>
         </div>
 
-        <div className="mb-4">
-          <h2 className="font-semibold">Event Price</h2>
-          <p>{isFree ? "FREE" : formatIDR(eventPrice)}</p>
-        </div>
-
-        {/* Wallet & Points & Coupon Info */}
-        <div className="mb-4">
-          <h2 className="font-semibold">Wallet Balance</h2>
-          <p className="text-xl">{formatIDR(walletBalance)}</p>
-        </div>
-        <div className="mb-4">
-          <h2 className="font-semibold">Points Balance</h2>
-          <p className="text-xl">{points} points</p>
-          {expiresAt && (
-            <p className="text-sm text-gray-500">
-              Expires on {formatDate(expiresAt)}
-            </p>
-          )}
-        </div>
-        {hasCoupon ? (
+        {/* Info Diskon (jika coupon dipakai) */}
+        {hasCoupon && (
           <div className="mb-4">
             <h2 className="text-purple-700 font-semibold">
               You have a 10% coupon!
@@ -276,10 +276,59 @@ export default function PaymentPage({ params }) {
               Valid until{" "}
               {couponExpires ? new Date(couponExpires).toDateString() : "-"}
             </p>
+            <div className="flex items-center space-x-2 mt-2">
+              <input
+                type="checkbox"
+                checked={useCoupon}
+                onChange={(e) => setUseCoupon(e.target.checked)}
+              />
+              <label>Use 10% Coupon?</label>
+            </div>
+            {useCoupon && (
+              <p className="text-sm text-green-700 mt-1">
+                Coupon Discount: -{formatIDR(couponDiscount)}
+              </p>
+            )}
           </div>
-        ) : (
-          <p className="mb-4 text-gray-500">No active coupon</p>
         )}
+
+        {/* Info Points */}
+        <div className="mb-4">
+          <h2 className="font-semibold">Points Balance</h2>
+          <p className="text-xl">{points} points</p>
+          {expiresAt && (
+            <p className="text-sm text-gray-500">
+              Expires on {formatDate(expiresAt)}
+            </p>
+          )}
+          {canRedeemPoints && (
+            <div className="flex items-center space-x-2 mt-2">
+              <input
+                type="checkbox"
+                checked={redeem}
+                onChange={(e) => setRedeem(e.target.checked)}
+              />
+              <label>Redeem Points?</label>
+            </div>
+          )}
+        </div>
+
+        {/* Wallet Info */}
+        <div className="mb-4">
+          <h2 className="font-semibold">Wallet Balance</h2>
+          <p className="text-xl">{formatIDR(walletBalance)}</p>
+        </div>
+
+        {/* Tampilkan final price estimate */}
+        <div className="mb-4">
+          <h4 className="font-semibold">Estimated Final Price</h4>
+          <p className="text-xl text-blue-700 font-bold">
+            {formatIDR(finalPriceEstimate)}
+          </p>
+          <p className="text-xs text-gray-400">
+            (Including coupon & points if selected)
+          </p>
+        </div>
 
         {/* Top-up form */}
         <form onSubmit={handleTopUp} className="border p-4 mb-6">
@@ -305,39 +354,6 @@ export default function PaymentPage({ params }) {
         {/* Purchase form */}
         <form onSubmit={handlePayTicket} className="border p-4">
           <h3 className="font-semibold mb-2">Buy Ticket</h3>
-          {/* useCoupon */}
-          {hasCoupon && (
-            <div className="mb-2 flex items-center space-x-2">
-              <input
-                type="checkbox"
-                checked={useCoupon}
-                onChange={(e) => setUseCoupon(e.target.checked)}
-              />
-              <label>Use 10% Coupon?</label>
-            </div>
-          )}
-
-          {canRedeemPoints && (
-            <div className="mb-4 flex items-center space-x-2">
-              <input
-                type="checkbox"
-                checked={redeem}
-                onChange={(e) => setRedeem(e.target.checked)}
-              />
-              <label>Redeem Points?</label>
-            </div>
-          )}
-
-          <div className="mb-4">
-            <h4 className="font-semibold">Estimated Final Price</h4>
-            <p className="text-xl text-blue-700 font-bold">
-              {formatIDR(finalPriceEstimate)}
-            </p>
-            <p className="text-xs text-gray-400">
-              Estimated with coupons & points
-            </p>
-          </div>
-
           <button
             type="submit"
             disabled={loading}
